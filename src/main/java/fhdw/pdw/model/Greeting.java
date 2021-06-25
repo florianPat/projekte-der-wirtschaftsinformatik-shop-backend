@@ -1,8 +1,19 @@
 package fhdw.pdw.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "greeting")
 public class Greeting {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     protected long id;
     protected String content;
+
+    //@ManyToOne
+    //@OneToOne ... same as in doctrine: https://www.youtube.com/watch?v=tSb02fMEB5o&list=PLG5RS5k7TfUpgO0B2SEWwSs6jRwL8QiHw&index=20
+    //protected Relation relation;
 
     public Greeting(long id, String content) {
         this.id = id;
