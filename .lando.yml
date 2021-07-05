@@ -1,0 +1,39 @@
+name: pdw-shop-backend
+proxy:
+  appserver:
+    - pdw-shop-backend.lndo.site:8080
+services:
+  database:
+    type: mysql:8.0
+    creds:
+      user: mysql
+      password: mysql
+      database: database
+  appserver:
+    type: compose
+    build:
+      - chmod +x /app/docker/lando/java/cmd.sh
+    scanner: false
+    services:
+      build: ./docker/lando/java
+      command: /app/docker/lando/java/cmd.sh
+      ports:
+        - "8080:8080"
+        - "5005:5005"
+      environment:
+        LANDO_DROP_USER: www-data
+        QOVERY_DATABASE_MY_DB_HOST: database
+        QOVERY_DATABASE_MY_DB_PORT: 3306
+        QOVERY_DATABASE_MY_DB_DATABASE: database
+        QOVERY_DATABASE_MY_DB_USERNAME: mysql
+        QOVERY_DATABASE_MY_DB_PASSWORD: mysql
+tooling:
+  compile:
+    service: appserver
+    cmd: cd /app && ./gradlew build
+  test:
+    service: appserver
+    cmd: cd /app && ./gradlew test
+  mysql:
+    service: database
+    cmd: mysql -uroot
