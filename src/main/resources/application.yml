@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: server.port=${PORT:8080}
 
 spring:
   jackson:
@@ -9,11 +9,11 @@ spring:
       write-dates-as-timestamps: false
     default-property-inclusion: non_empty
   datasource:
+    driverClassName: org.postgresql.Driver
     url: ${JDBC_DATABASE_URL}
     username: ${JDBC_DATABASE_USERNAME}
     password: ${JDBC_DATABASE_PASSWORD}
   jpa:
     hibernate:
-      # Don't do this at home...
+      # Don't do this at home... TODO: Flyway
       ddl-auto: update
-# TODO: Flyway
