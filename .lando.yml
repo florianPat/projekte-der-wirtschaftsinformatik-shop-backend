@@ -4,10 +4,10 @@ proxy:
     - pdw-shop-backend.lndo.site:8080
 services:
   database:
-    type: mysql:8.0
+    type: postgres:13
     creds:
-      user: mysql
-      password: mysql
+      user: postgres
+      password: postgres
       database: database
   appserver:
     type: compose
@@ -22,11 +22,9 @@ services:
         - "5005:5005"
       environment:
         LANDO_DROP_USER: www-data
-        QOVERY_DATABASE_MY_DB_HOST: database
-        QOVERY_DATABASE_MY_DB_PORT: 3306
-        QOVERY_DATABASE_MY_DB_DATABASE: database
-        QOVERY_DATABASE_MY_DB_USERNAME: mysql
-        QOVERY_DATABASE_MY_DB_PASSWORD: mysql
+        JDBC_DATABASE_URL: "jdbc:postgresql://database:5432/database"
+        JDBC_DATABASE_USERNAME: postgres
+        JDBC_DATABASE_PASSWORD: postgres
 tooling:
   compile:
     service: appserver

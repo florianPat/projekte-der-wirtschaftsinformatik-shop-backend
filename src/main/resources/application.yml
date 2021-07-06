@@ -9,9 +9,9 @@ spring:
       write-dates-as-timestamps: false
     default-property-inclusion: non_empty
   datasource:
-    url: "jdbc:mysql://${QOVERY_DATABASE_MY_DB_HOST:127.0.0.1}:${QOVERY_DATABASE_MY_DB_PORT:3306}/${QOVERY_DATABASE_MY_DB_DATABASE:database}"
-    username: ${QOVERY_DATABASE_MY_DB_USERNAME:mysql}
-    password: ${QOVERY_DATABASE_MY_DB_PASSWORD:mysql}
+    url: ${JDBC_DATABASE_URL}
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
   jpa:
     hibernate:
       # Don't do this at home...
