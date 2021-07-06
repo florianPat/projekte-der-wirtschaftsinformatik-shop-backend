@@ -22,9 +22,9 @@ services:
         - "5005:5005"
       environment:
         LANDO_DROP_USER: www-data
-        JDBC_DATABASE_URL: "jdbc:postgresql://database:5432/database"
-        JDBC_DATABASE_USERNAME: postgres
-        JDBC_DATABASE_PASSWORD: postgres
+        SPRING_DATASOURCE_URL: "jdbc:postgresql://database:5432/database"
+        SPRING_DATASOURCE_USERNAME: postgres
+        SPRING_DATASOURCE_PASSWORD: postgres
 tooling:
   compile:
     service: appserver
@@ -32,6 +32,6 @@ tooling:
   test:
     service: appserver
     cmd: cd /app && ./gradlew test
-  mysql:
+  postgresql:
     service: database
-    cmd: mysql -uroot
+    cmd: psql -U postgres -d database
