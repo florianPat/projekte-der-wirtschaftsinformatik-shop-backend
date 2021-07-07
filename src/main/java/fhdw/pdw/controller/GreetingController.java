@@ -9,25 +9,20 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class GreetingController {
 
-    @Autowired
-    protected GreetingService greetingService;
+  @Autowired protected GreetingService greetingService;
 
-    @GetMapping("/greeting")
-    public Greeting greeting(@RequestParam(value = "name", defaultValue = "world") String name)
-    {
-        return new Greeting(0, "Hello " + name);
-    }
+  @GetMapping("/greeting")
+  public Greeting greeting(@RequestParam(value = "name", defaultValue = "world") String name) {
+    return new Greeting(0, "Hello " + name);
+  }
 
-    @GetMapping("/greeting/{id}")
-    public Greeting parameterizedGreeting(@PathVariable String id)
-    {
-        return new Greeting(1, "Hello " + id);
-    }
+  @GetMapping("/greeting/{id}")
+  public Greeting parameterizedGreeting(@PathVariable String id) {
+    return new Greeting(1, "Hello " + id);
+  }
 
-    @PostMapping("/greeting")
-    public void addGreeting(@RequestBody Greeting greeting)
-    {
-        greetingService.addGreeting(greeting);
-    }
-
+  @PostMapping("/greeting")
+  public void addGreeting(@RequestBody Greeting greeting) {
+    greetingService.addGreeting(greeting);
+  }
 }

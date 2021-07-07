@@ -6,8 +6,5 @@ import org.springframework.stereotype.Service;
 @Service
 public class GreetingService {
 
-    public void addGreeting(Greeting greeting)
-    {
-    }
-
+  public void addGreeting(Greeting greeting) {}
 }

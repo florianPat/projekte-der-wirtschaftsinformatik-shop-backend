@@ -2,6 +2,9 @@ plugins {
 	id 'org.springframework.boot' version '2.5.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'com.diffplug.spotless' version '5.14.1'
+	id "com.github.spotbugs" version "4.7.1"
+	id "org.flywaydb.flyway" version "7.11.0"
 }
 
 group = 'fhdw'
@@ -21,6 +24,7 @@ dependencies {
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.flywaydb:flyway-core'
 	testRuntimeOnly 'com.h2database:h2'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.postgresql:postgresql'
@@ -33,4 +37,27 @@ test {
 
 bootRun {
 	systemProperties = System.properties
+}
+
+flyway {
+	url = '${env.SPRING_DATASOURCE_URL}'
+	user = '${env.SPRING_DATASOURCE_USERNAME}'
+	password = '${env.SPRING_DATASOURCE_PASSWORD}'
+}
+// we need to build classes before we can migrate
+flywayMigrate.dependsOn classes
+
+spotless {
+	java {
+		importOrder() // standard import order
+		removeUnusedImports()
+		googleJavaFormat()
+	}
+}
+
+spotbugs {
+	ignoreFailures = false
+	showStackTraces = true
+	showProgress = true
+	effort = "max"
 }

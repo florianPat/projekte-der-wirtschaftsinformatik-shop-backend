@@ -6,14 +6,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.requiresChannel()
-            .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
-            .requiresSecure();
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.requiresChannel()
+        .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+        .requiresSecure();
 
-        http.authorizeRequests((requests) -> requests.anyRequest().permitAll());
-        http.formLogin();
-        http.httpBasic();
-    }
+    http.authorizeRequests((requests) -> requests.anyRequest().permitAll());
+    http.formLogin();
+    http.httpBasic();
+  }
 }

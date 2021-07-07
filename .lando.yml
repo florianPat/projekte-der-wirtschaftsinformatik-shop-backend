@@ -35,3 +35,12 @@ tooling:
   postgresql:
     service: database
     cmd: psql -U postgres -d database
+  spotless:
+    service: appserver
+    cmd: cd /app && ./gradlew spotlessJavaApply
+  spotbugs:
+    service: appserver
+    cmd: cd /app && ./gradlew spotbugsMain && ./gradlew spotbugsTest
+  checkstyle:
+    servcie: appserver
+    cmd: cd /app && ./gradlew checkstyleMain && ./gradlew checkstyleTest
