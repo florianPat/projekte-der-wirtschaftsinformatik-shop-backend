@@ -17,3 +17,4 @@ spring:
     hibernate:
       # Don't do this at home... TODO: Flyway
       ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
