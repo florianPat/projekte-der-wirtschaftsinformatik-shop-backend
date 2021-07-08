@@ -4,6 +4,7 @@ Backend for the shop application developed for the university module "Projekte d
 ## Projekt Setup
 - `git clone https://github.com/florianPat/projekte-der-wirtschaftsinformatik-shop-backend.git`
 - `cd projekte-der-wirtschaftsinformatik-shop-backend`
+- `git flow init -d`
 - `lando start`
 - Visit [Shop-Backend](http://pdw-shop-backend.lndo.site:8080/api/greeting)
 
