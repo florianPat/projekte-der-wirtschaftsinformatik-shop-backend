@@ -22,9 +22,6 @@ services:
         - "5005:5005"
       environment:
         LANDO_DROP_USER: www-data
-        SPRING_DATASOURCE_URL: "jdbc:postgresql://database:5432/database"
-        SPRING_DATASOURCE_USERNAME: postgres
-        SPRING_DATASOURCE_PASSWORD: postgres
 tooling:
   compile:
     service: appserver
@@ -41,6 +38,6 @@ tooling:
   spotbugs:
     service: appserver
     cmd: cd /app && ./gradlew spotbugsMain && ./gradlew spotbugsTest
-  checkstyle:
-    servcie: appserver
-    cmd: cd /app && ./gradlew checkstyleMain && ./gradlew checkstyleTest
+  hibernateSchema:
+    service: appserver
+    cmd: cd /app && ./gradlew -Dspring.profiles.active=generatesql bootRun

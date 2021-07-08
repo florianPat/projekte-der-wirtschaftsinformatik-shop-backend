@@ -10,9 +10,9 @@ spring:
     default-property-inclusion: non_empty
   datasource:
     driverClassName: org.postgresql.Driver
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: "jdbc:postgresql://database:5432/database"
+    username: "postgres"
+    password: "postgres"
   jpa:
     hibernate:
       ddl-auto: validate
@@ -35,5 +35,5 @@ spring:
           schema-generation:
             create-source: metadata
             scripts:
-              action: create
+              action: update
               create-target: src/main/resources/ddl_jpa_creation.sql

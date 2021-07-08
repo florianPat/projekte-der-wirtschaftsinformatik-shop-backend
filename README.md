@@ -14,3 +14,6 @@ Backend for the shop application developed for the university module "Projekte d
     - `\dt`: Show tables
     - `\d tablename`: Describe table
     - `\q`: exit
+- `lando spotbugs`: Run static code analysis
+- `lando spotless`: Run code format fixer
+- `lando hibernateSchema`: Create hibernate schema file for migration creation
