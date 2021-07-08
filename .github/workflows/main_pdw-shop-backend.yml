@@ -20,7 +20,7 @@ jobs:
         java-version: '11'
 
     - name: Build with Gradle
-      run: gradle clean test
+      run: gradle clean build
 
     - name: Deploy to heroku
       uses: akhileshns/heroku-deploy@v3.12.12
