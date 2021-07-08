@@ -22,8 +22,6 @@ spring:
           lob:
             non_contextual_creation: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-  flyway:
-    baselineOnMigrate: true
 
 ---
 spring:
