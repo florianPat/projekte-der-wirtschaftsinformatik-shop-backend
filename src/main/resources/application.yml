@@ -15,7 +15,25 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+---
+spring:
+  profiles: generatesql
   flyway:
-    baselineOnMigrate: true
+    enabled: false
+  jpa:
+    properties:
+      javax:
+        persistence:
+          schema-generation:
+            create-source: metadata
+            scripts:
+              action: create
+              create-target: src/main/resources/ddl_jpa_creation.sql
