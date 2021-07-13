@@ -12,7 +12,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
   public void addCorsMappings(CorsRegistry registry) {
     registry
         .addMapping("/api/**")
-        .allowedOriginPatterns("https://fhdw-pdw-shop-frontend*.vercel.app/", "http://localhost:3000/")
+        .allowedOriginPatterns(
+            "https://fhdw-pdw-shop-frontend*.vercel.app/", "http://localhost:3000/")
         .allowedMethods("*");
   }
 }
