@@ -1,0 +1,14 @@
+insert into allergen (name) values ('Eier/-Erzeugnisse');
+insert into allergen (name) values ('Erdnüsse/-Erzeugnisse');
+insert into allergen (name) values ('Fisch/-Erzeugnisse');
+insert into allergen (name) values ('Glutenhaltiges Getreide/-Erzeugnisse');
+insert into allergen (name) values ('Krebstiere/-Erzeugnisse');
+insert into allergen (name) values ('Lupine/-Erzeugnisse');
+insert into allergen (name) values ('Milch/-Erzeugnisse');
+insert into allergen (name) values ('Schalenfrüchte (Nüsse) /-Erzeugnisse');
+insert into allergen (name) values ('Schwefeldioxid/Sulfite');
+insert into allergen (name) values ('Sellerie/-Erzeugnisse');
+insert into allergen (name) values ('Senf/-Erzeugnisse');
+insert into allergen (name) values ('Sesam/-Erzeugnisse');
+insert into allergen (name) values ('Soja/-Erzeugnisse');
+insert into allergen (name) values ('Weichtiere/-Erzeugnisse');
