@@ -4,8 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PdwApplicationTests {
-
+class PdwApplicationTests extends AbstractFunctionalTestCase {
   @Test
   void contextLoads() {}
+
+  @Test
+  void testTest() {
+    int i = 4;
+  }
 }

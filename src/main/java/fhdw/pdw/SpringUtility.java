@@ -13,14 +13,18 @@ public class SpringUtility implements ApplicationContextAware {
 
   @Override
   public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-    SpringUtility.applicationContext = applicationContext;
+    SpringUtility.setContext(applicationContext);
   }
 
-  public static <T> T getBean(final Class clazz) {
+  public static <T> T getBean(final Class<T> clazz) {
     return (T) SpringUtility.applicationContext.getBean(clazz);
   }
 
   public static ApplicationContext getContext() {
     return SpringUtility.applicationContext;
+  }
+
+  public static void setContext(ApplicationContext context) {
+    SpringUtility.applicationContext = context;
   }
 }
