@@ -15,7 +15,7 @@ public class CsvImporter<T> {
       CsvSchema bootstrapSchema = CsvSchema.emptySchema().withHeader();
       CsvMapper mapper = new CsvMapper();
       File file = new ClassPathResource(filename).getFile();
-      MappingIterator<T> readValues = mapper.reader(type).with(bootstrapSchema).readValues(file);
+      MappingIterator<T> readValues = mapper.readerFor(type).with(bootstrapSchema).readValues(file);
       return readValues.readAll();
     } catch (Exception e) {
       throw new RuntimeException("Error import csv file " + filename + "\n" + e);

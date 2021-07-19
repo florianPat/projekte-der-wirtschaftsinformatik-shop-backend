@@ -16,7 +16,7 @@ repositories {
 }
 
 compileJava {
-	options.compilerArgs += ["-Xlint:unchecked"]
+	options.compilerArgs += ["-Xlint:unchecked", "-Xlint:deprecation"]
 }
 
 dependencies {
@@ -44,6 +44,11 @@ bootRun {
 	systemProperties = System.properties
 }
 
+flyway {
+	url = '${env.SPRING_DATASOURCE_URL}'
+	user = '${env.SPRING_DATASOURCE_USERNAME}'
+	password = '${env.SPRING_DATASOURCE_PASSWORD}'
+}
 // we need to build classes before we can migrate
 flywayMigrate.dependsOn classes
 
