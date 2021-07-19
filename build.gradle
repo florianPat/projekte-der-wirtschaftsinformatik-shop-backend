@@ -15,6 +15,10 @@ repositories {
 	mavenCentral()
 }
 
+compileJava {
+	options.compilerArgs += ["-Xlint:unchecked"]
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -29,6 +33,7 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv'
 }
 
 test {
@@ -39,11 +44,6 @@ bootRun {
 	systemProperties = System.properties
 }
 
-flyway {
-	url = System.getenv('SPRING_DATASOURCE_URL')
-	user = System.getenv('SPRING_DATASOURCE_USERNAME')
-	password = System.getenv('SPRING_DATASOURCE_PASSWORD')
-}
 // we need to build classes before we can migrate
 flywayMigrate.dependsOn classes
 

@@ -1,0 +1,13 @@
+insert into allergen (name) values ('mit Konservierungsstoff');
+insert into allergen (name) values ('mit Farbstoff');
+insert into allergen (name) values ('mit Antioxidationsmittel');
+insert into allergen (name) values ('mit Geschmacksverstärker');
+insert into allergen (name) values ('mit Phosphat');
+insert into allergen (name) values ('mit Süßungsmittel');
+insert into allergen (name) values ('enthält eine Penylalaninquelle');
+insert into allergen (name) values ('geschwefelt');
+insert into allergen (name) values ('geschwärzt');
+insert into allergen (name) values ('koffeinhaltig');
+insert into allergen (name) values ('chininhaltig');
+insert into allergen (name) values ('gewachst');
+insert into allergen (name) values ('beinhaltet Gluten');
