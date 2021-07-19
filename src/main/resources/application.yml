@@ -25,7 +25,9 @@ spring:
 
 ---
 spring:
-  profiles: generatesql
+  config:
+    activate:
+      on-profile: generatesql
   flyway:
     enabled: false
   jpa:
