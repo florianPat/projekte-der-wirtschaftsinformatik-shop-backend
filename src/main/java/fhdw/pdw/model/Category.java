@@ -14,6 +14,8 @@ public class Category extends AbstractEntity {
   @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
   protected List<Product> products = new ArrayList<>();
 
+  public Category() {}
+
   public Category(int id, String title, String cover) {
     this.id = id;
     this.title = title;

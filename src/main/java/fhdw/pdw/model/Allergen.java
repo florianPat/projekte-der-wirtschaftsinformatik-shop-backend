@@ -14,6 +14,8 @@ public class Allergen extends AbstractEntity {
       inverseJoinColumns = @JoinColumn(name = "product_id"))
   protected List<Product> products;
 
+  public Allergen() {}
+
   public Allergen(String name) {
     this.name = name;
   }

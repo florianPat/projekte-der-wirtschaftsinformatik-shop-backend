@@ -1,40 +1,35 @@
 package fhdw.pdw.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class ProductVariant extends AbstractEntity {
-  protected int numberOfBottles;
-  protected float quantity;
+  protected int stock;
   protected float price;
 
   @ManyToOne
   @JoinColumn(name = "product_id")
   protected Product product;
 
+  @ManyToOne
+  @JoinColumn(name = "unit_id")
+  protected Unit unit;
+
   public ProductVariant() {}
 
-  public ProductVariant(int numberOfBottles, float quantity, float price, Product product) {
-    this.numberOfBottles = numberOfBottles;
-    this.quantity = quantity;
+  public ProductVariant(int stock, float price) {
+    this.stock = stock;
     this.price = price;
-    this.product = product;
   }
 
-  public int getNumberOfBottles() {
-    return numberOfBottles;
+  public int getStock() {
+    return stock;
   }
 
-  public void setNumberOfBottles(int numberOfBottles) {
-    this.numberOfBottles = numberOfBottles;
-  }
-
-  public float getQuantity() {
-    return quantity;
-  }
-
-  public void setQuantity(float quantity) {
-    this.quantity = quantity;
+  public void setStock(int stock) {
+    this.stock = stock;
   }
 
   public float getPrice() {
@@ -51,5 +46,13 @@ public class ProductVariant extends AbstractEntity {
 
   public void setProduct(Product product) {
     this.product = product;
+  }
+
+  public Unit getUnit() {
+    return unit;
+  }
+
+  public void setUnit(Unit unit) {
+    this.unit = unit;
   }
 }

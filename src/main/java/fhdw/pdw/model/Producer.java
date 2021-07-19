@@ -13,6 +13,8 @@ public class Producer extends AbstractEntity {
   @OneToMany(mappedBy = "producer", cascade = CascadeType.ALL)
   protected List<Product> products = new ArrayList<>();
 
+  public Producer() {}
+
   public Producer(String name) {
     this.name = name;
   }

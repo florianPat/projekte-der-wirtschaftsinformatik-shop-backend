@@ -7,27 +7,32 @@ import javax.persistence.*;
 @Entity
 public class Product extends AbstractEntity {
   protected String name;
+  protected String cover;
 
   @ManyToOne
   @JoinColumn(name = "category_id")
   protected Category category;
 
-  @ManyToOne
-  @JoinColumn(name = "producer_id")
-  protected Producer producer;
+  // @ManyToOne
+  // @JoinColumn(name = "producer_id")
+  protected String producer;
 
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
   protected List<ProductVariant> variants = new ArrayList<>();
 
-  @ManyToMany(mappedBy = "products")
-  protected List<Allergen> allergens = new ArrayList<>();
+  // @ManyToMany(mappedBy = "products")
+  protected String allergens;
 
-  public Product(String name) {
+  public Product() {}
+
+  public Product(String name, String cover) {
     this.name = name;
+    this.cover = cover;
   }
 
-  public Product(String name, Category category, Producer producer) {
+  public Product(String name, String cover, Category category, String producer) {
     this.name = name;
+    this.cover = cover;
     this.category = category;
     this.producer = producer;
   }
@@ -40,6 +45,14 @@ public class Product extends AbstractEntity {
     this.name = name;
   }
 
+  public String getCover() {
+    return cover;
+  }
+
+  public void setCover(String cover) {
+    this.cover = cover;
+  }
+
   public Category getCategory() {
     return category;
   }
@@ -48,11 +61,11 @@ public class Product extends AbstractEntity {
     this.category = category;
   }
 
-  public Producer getProducer() {
+  public String getProducer() {
     return producer;
   }
 
-  public void setProducer(Producer producer) {
+  public void setProducer(String producer) {
     this.producer = producer;
   }
 
@@ -72,19 +85,11 @@ public class Product extends AbstractEntity {
     this.variants.remove(variant);
   }
 
-  public List<Allergen> getAllergens() {
+  public String getAllergens() {
     return allergens;
   }
 
-  public void setAllergens(List<Allergen> allergens) {
+  public void setAllergens(String allergens) {
     this.allergens = allergens;
-  }
-
-  public void addAllergen(Allergen allergen) {
-    this.allergens.add(allergen);
-  }
-
-  public void removeAllergen(Allergen allergen) {
-    this.allergens.remove(allergen);
   }
 }
