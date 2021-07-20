@@ -1,8 +1,8 @@
 package fhdw.pdw.repository;
 
 import fhdw.pdw.model.Unit;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UnitRepository extends CrudRepository<Unit, Integer> {
+public interface UnitRepository extends JpaRepository<Unit, Integer> {
   Unit findByTitleAndAmountAndNumberOfContainer(String title, float amount, int numberOfContainers);
 }

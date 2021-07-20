@@ -1,6 +1,6 @@
 package fhdw.pdw.repository;
 
 import fhdw.pdw.model.ProductVariant;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductVariantRepository extends CrudRepository<ProductVariant, Integer> {}
+public interface ProductVariantRepository extends JpaRepository<ProductVariant, Integer> {}

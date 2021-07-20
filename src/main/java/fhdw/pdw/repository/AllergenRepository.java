@@ -1,6 +1,6 @@
 package fhdw.pdw.repository;
 
 import fhdw.pdw.model.Allergen;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AllergenRepository extends CrudRepository<Allergen, Integer> {}
+public interface AllergenRepository extends JpaRepository<Allergen, Integer> {}
