@@ -5,6 +5,7 @@ import fhdw.pdw.repository.AllergenRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @RequestMapping("/api")
 @RestController
@@ -17,7 +18,7 @@ public class AllergenController {
   }
 
   @GetMapping("/allergens")
-  public Iterable<Allergen> getAllergens() {
+  public List<Allergen> getAllergens() {
     return this.allergenRepository.findAll();
   }
 }

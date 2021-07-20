@@ -8,6 +8,10 @@ Backend for the shop application developed for the university module "Projekte d
 - `lando start`
 - Visit [Shop-Backend](http://pdw-shop-backend.lndo.site:8080/api/greeting)
 
+## Swagger OpenAPI Documentation
+- Visit [JSON-View](http://pdw-shop-backend.lndo.site:8080/v2/api-docs)
+- Visit [HTML-View](http://pdw-shop-backend.lndo.site:8080/swagger-ui/index.html)
+
 ## Tooling
 - `lando compile`: Build project and hot reload code
 - `lando test`: Run tests with the h2 in-memory database
