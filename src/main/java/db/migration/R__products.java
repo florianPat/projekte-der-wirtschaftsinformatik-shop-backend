@@ -17,11 +17,14 @@ public class R__products extends BaseJavaMigration {
 
   @Override
   public void migrate(Context context) {
-    if (productRepository.findByName("Evian Wasser") != null) {
-      return;
+    Product product = productRepository.findByName("Evian Wasser");
+    if (product == null) {
+      product =
+          new Product(
+              "Evian Wasser",
+              "https://res.cloudinary.com/deloma/image/upload/q_85/v1/images/product/74099737-40c2-4dc0-bfd2-8a6e8230abf6.jpg");
     }
 
-    Product product = new Product("Evian Wasser", "");
     product.setProducer("Evian");
     product.setCategory(categoryRepository.findByTitle("Wasser"));
     productRepository.save(product);
