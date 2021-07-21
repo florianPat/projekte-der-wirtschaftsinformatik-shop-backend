@@ -5,10 +5,9 @@ import fhdw.pdw.model.Product;
 import fhdw.pdw.model.ProductVariant;
 import fhdw.pdw.model.Unit;
 import fhdw.pdw.repository.*;
-import org.flywaydb.core.api.migration.BaseJavaMigration;
 import org.flywaydb.core.api.migration.Context;
 
-public class R__products extends BaseJavaMigration {
+public class R__products extends AbstractMigration {
   protected ProductRepository productRepository = SpringUtility.getBean(ProductRepository.class);
   protected CategoryRepository categoryRepository = SpringUtility.getBean(CategoryRepository.class);
   protected UnitRepository unitRepository = SpringUtility.getBean(UnitRepository.class);
@@ -19,12 +18,12 @@ public class R__products extends BaseJavaMigration {
   public void migrate(Context context) {
     Product product = productRepository.findByName("Evian Wasser");
     if (product == null) {
-      product =
-          new Product(
-              "Evian Wasser",
-              "https://res.cloudinary.com/deloma/image/upload/q_85/v1/images/product/74099737-40c2-4dc0-bfd2-8a6e8230abf6.jpg");
+      product = new Product();
     }
 
+    product.setName("Evian Wasser");
+    product.setCover(
+        "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcR9BpV8FtkZ0jy4JLt7v14VlNI3Eauu1_QwC4YUaUSBZx0bCXucNh_KlX1iOrr0NQNEzsvuTW82UUY&usqp=CAc");
     product.setProducer("Evian");
     product.setCategory(categoryRepository.findByTitle("Wasser"));
     productRepository.save(product);

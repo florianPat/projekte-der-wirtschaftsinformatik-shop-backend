@@ -46,9 +46,9 @@ bootRun {
 }
 
 flyway {
-	url = System.getenv('SPRING_DATASOURCE_URL')
-	user = System.getenv('SPRING_DATASOURCE_USERNAME')
-	password = System.getenv('SPRING_DATASOURCE_PASSWORD')
+	url = (null != System.getenv('SPRING_DATASOURCE_URL')) ? System.getenv('SPRING_DATASOURCE_URL') : "jdbc:postgresql://database:5432/database"
+	user = (null != System.getenv('SPRING_DATASOURCE_USERNAME')) ? System.getenv('SPRING_DATASOURCE_USERNAME') : "postgres"
+	password = (null != System.getenv('SPRING_DATASOURCE_PASSWORD')) ? System.getenv('SPRING_DATASOURCE_PASSWORD') : "postgres"
 }
 // we need to build classes before we can migrate
 flywayMigrate.dependsOn classes
