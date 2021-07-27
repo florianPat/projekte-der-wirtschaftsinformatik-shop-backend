@@ -4,20 +4,18 @@ public class ProductDto {
   protected String name;
   protected String category;
   protected String producer;
-  protected float amount;
-  protected int numberOfContainer;
-  protected String unitTitle;
+  protected String amount; // "6 x 0.5 L"
   protected float price;
   protected String allergens;
   protected String cover;
+
+  public ProductDto() {}
 
   public ProductDto(
       String name,
       String category,
       String producer,
-      float amount,
-      int numberOfContainer,
-      String unitTitle,
+      String amount,
       float price,
       String allergens,
       String cover) {
@@ -25,8 +23,6 @@ public class ProductDto {
     this.category = category;
     this.producer = producer;
     this.amount = amount;
-    this.numberOfContainer = numberOfContainer;
-    this.unitTitle = unitTitle;
     this.price = price;
     this.allergens = allergens;
     this.cover = cover;
@@ -57,27 +53,19 @@ public class ProductDto {
   }
 
   public float getAmount() {
-    return amount;
+    return Float.parseFloat(amount.split(" ")[2]);
   }
 
-  public void setAmount(float amount) {
+  public void setAmount(String amount) {
     this.amount = amount;
   }
 
   public int getNumberOfContainer() {
-    return numberOfContainer;
-  }
-
-  public void setNumberOfContainer(int numberOfContainer) {
-    this.numberOfContainer = numberOfContainer;
+    return Integer.parseInt(amount.split(" ")[0]);
   }
 
   public String getUnitTitle() {
-    return unitTitle;
-  }
-
-  public void setUnitTitle(String unitTitle) {
-    this.unitTitle = unitTitle;
+    return amount.split(" ")[3];
   }
 
   public float getPrice() {

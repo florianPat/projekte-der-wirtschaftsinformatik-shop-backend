@@ -16,18 +16,9 @@ public class Category extends AbstractEntity {
 
   public Category() {}
 
-  public Category(int id, String title, String cover) {
-    this.id = id;
+  public Category(String title, String cover) {
     this.title = title;
     this.cover = cover;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
   }
 
   public String getTitle() {
