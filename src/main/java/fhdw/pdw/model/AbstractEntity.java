@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.*;
 
 @MappedSuperclass
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id") // TODO: Fix!!
 public abstract class AbstractEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

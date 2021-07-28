@@ -22,3 +22,4 @@ Backend for the shop application developed for the university module "Projekte d
 - `lando spotbugs`: Run static code analysis
 - `lando spotless`: Run code format fixer
 - `lando hibernateSchema`: Create hibernate schema file for migration creation
+- `lando flywayMigrate`: Migrate database with the latest migrations
