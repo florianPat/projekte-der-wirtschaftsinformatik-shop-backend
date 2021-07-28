@@ -56,12 +56,12 @@ public class AuthController {
 
     if (!user.getPassword().equals(user.getPasswordRepeat())) {
       return new ResponseEntity<>(
-          new ApiResponse(false, "Repeated password is not equal to the password!!"),
+          new ApiResponse(false, "Repeated password is not equal to the password!"),
           HttpStatus.BAD_REQUEST);
     }
 
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    user.setPasswordRepeat("");
+    user.setPasswordRepeat("this_is_the_repeated_password");
 
     Role roleUser =
         roleRepository

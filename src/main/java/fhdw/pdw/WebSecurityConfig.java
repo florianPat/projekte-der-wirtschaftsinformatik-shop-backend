@@ -68,7 +68,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
         .requiresSecure();
 
-    http.exceptionHandling()
+    http.csrf()
+        .disable()
+        .exceptionHandling()
         .authenticationEntryPoint(unauthorizedHandler)
         .and()
         .sessionManagement()
