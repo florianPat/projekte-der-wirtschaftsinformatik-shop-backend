@@ -1,147 +1,146 @@
 package fhdw.pdw.model;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-                "email"
-        })
-})
+@Table(
+    name = "users",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
 public class User extends AbstractEntity {
-    @NotBlank
-    protected String firstname;
-    @NotBlank
-    protected String lastname;
-    @NotBlank
-    protected String street;
-    @NotBlank
-    protected String zip;
-    @NotBlank
-    protected String city;
-    @NotBlank
-    protected String birthday;
-    @NotBlank
-    @Email
-    protected String email;
-    @NotBlank
-    protected String password;
-    @NotBlank
-    protected String passwordRepeat;
-    @NotNull
-    protected boolean privacyStatement;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "users_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+  @NotBlank protected String firstname;
+  @NotBlank protected String lastname;
+  @NotBlank protected String street;
+  @NotBlank protected String zip;
+  @NotBlank protected String city;
+  @NotBlank protected String birthday;
+  @NotBlank @Email protected String email;
+  @NotBlank protected String password;
+  @NotBlank protected String passwordRepeat;
+  @NotNull @AssertTrue protected boolean privacyStatement;
 
-    public User() {
-    }
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "users_roles",
+      joinColumns = @JoinColumn(name = "users_id"),
+      inverseJoinColumns = @JoinColumn(name = "role_id"))
+  private Set<Role> roles = new HashSet<>();
 
-    public User(String firstname, String lastname, String street, String zip, String city, String birthday, String email, String password, String passwordRepeat, boolean privacyStatement) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.street = street;
-        this.zip = zip;
-        this.city = city;
-        this.birthday = birthday;
-        this.email = email;
-        this.password = password;
-        this.passwordRepeat = passwordRepeat;
-        this.privacyStatement = privacyStatement;
-    }
+  public User() {}
 
-    public String getFirstname() {
-        return firstname;
-    }
+  public User(
+      String firstname,
+      String lastname,
+      String street,
+      String zip,
+      String city,
+      String birthday,
+      String email,
+      String password,
+      String passwordRepeat,
+      boolean privacyStatement) {
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.street = street;
+    this.zip = zip;
+    this.city = city;
+    this.birthday = birthday;
+    this.email = email;
+    this.password = password;
+    this.passwordRepeat = passwordRepeat;
+    this.privacyStatement = privacyStatement;
+  }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
+  public String getFirstname() {
+    return firstname;
+  }
 
-    public String getLastname() {
-        return lastname;
-    }
+  public void setFirstname(String firstname) {
+    this.firstname = firstname;
+  }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
+  public String getLastname() {
+    return lastname;
+  }
 
-    public String getStreet() {
-        return street;
-    }
+  public void setLastname(String lastname) {
+    this.lastname = lastname;
+  }
 
-    public void setStreet(String street) {
-        this.street = street;
-    }
+  public String getStreet() {
+    return street;
+  }
 
-    public String getZip() {
-        return zip;
-    }
+  public void setStreet(String street) {
+    this.street = street;
+  }
 
-    public void setZip(String zip) {
-        this.zip = zip;
-    }
+  public String getZip() {
+    return zip;
+  }
 
-    public String getCity() {
-        return city;
-    }
+  public void setZip(String zip) {
+    this.zip = zip;
+  }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
+  public String getCity() {
+    return city;
+  }
 
-    public String getBirthday() {
-        return birthday;
-    }
+  public void setCity(String city) {
+    this.city = city;
+  }
 
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
-    }
+  public String getBirthday() {
+    return birthday;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public void setBirthday(String birthday) {
+    this.birthday = birthday;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public String getPasswordRepeat() {
-        return passwordRepeat;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public void setPasswordRepeat(String passwordRepeat) {
-        this.passwordRepeat = passwordRepeat;
-    }
+  public String getPasswordRepeat() {
+    return passwordRepeat;
+  }
 
-    public boolean isPrivacyStatement() {
-        return privacyStatement;
-    }
+  public void setPasswordRepeat(String passwordRepeat) {
+    this.passwordRepeat = passwordRepeat;
+  }
 
-    public void setPrivacyStatement(boolean privacyStatement) {
-        this.privacyStatement = privacyStatement;
-    }
+  public boolean isPrivacyStatement() {
+    return privacyStatement;
+  }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
+  public void setPrivacyStatement(boolean privacyStatement) {
+    this.privacyStatement = privacyStatement;
+  }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
+  public Set<Role> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(Set<Role> roles) {
+    this.roles = roles;
+  }
 }
