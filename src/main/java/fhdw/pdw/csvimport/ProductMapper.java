@@ -7,6 +7,7 @@ import fhdw.pdw.model.Unit;
 import fhdw.pdw.model.dto.ProductDto;
 import fhdw.pdw.repository.CategoryRepository;
 import fhdw.pdw.repository.ProductRepository;
+import fhdw.pdw.repository.ProductVariantRepository;
 import fhdw.pdw.repository.UnitRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +18,17 @@ public class ProductMapper {
   protected ProductRepository productRepository;
   protected CategoryRepository categoryRepository;
   protected UnitRepository unitRepository;
+  protected ProductVariantRepository productVariantRepository;
 
   public ProductMapper(
       ProductRepository productRepository,
       CategoryRepository categoryRepository,
-      UnitRepository unitRepository) {
+      UnitRepository unitRepository,
+      ProductVariantRepository productVariantRepository) {
     this.productRepository = productRepository;
     this.categoryRepository = categoryRepository;
     this.unitRepository = unitRepository;
+    this.productVariantRepository = productVariantRepository;
   }
 
   public List<Product> mapFrom(List<ProductDto> dtos) {
@@ -55,21 +59,32 @@ public class ProductMapper {
 
   public void mapAndReplaceFrom(List<ProductDto> dtos) {
     productRepository.deleteAll();
+    unitRepository.deleteAll();
+    productVariantRepository.deleteAll();
     List<Product> products = mapFrom(dtos);
     for (Product product : products) {
-      if (null == categoryRepository.findByTitle(product.getCategory().getTitle())) {
-        product.setCategory(categoryRepository.save(product.getCategory()));
+      if (0 == product.getCategory().getId()) {
+        Category category = categoryRepository.findByTitle(product.getCategory().getTitle());
+        if (null == category) {
+          category = categoryRepository.save(product.getCategory());
+        }
+        product.setCategory(category);
       }
 
       List<ProductVariant> variants = new ArrayList<>();
       for (ProductVariant variant : product.getVariants()) {
-        Unit unit = variant.getUnit();
-        if (null
-            == unitRepository.findByTitleAndAmountAndNumberOfContainer(
-                unit.getTitle(), unit.getAmount(), unit.getNumberOfContainer())) {
-          variant.setUnit(unitRepository.save(unit));
-          variants.add(variant);
+        if (0 == variant.getUnit().getId()) {
+          Unit unit =
+              unitRepository.findByTitleAndAmountAndNumberOfContainer(
+                  variant.getUnit().getTitle(),
+                  variant.getUnit().getAmount(),
+                  variant.getUnit().getNumberOfContainer());
+          if (null == unit) {
+            unit = unitRepository.save(variant.getUnit());
+          }
+          variant.setUnit(unit);
         }
+        variants.add(variant);
       }
       product.setVariants(variants);
 
