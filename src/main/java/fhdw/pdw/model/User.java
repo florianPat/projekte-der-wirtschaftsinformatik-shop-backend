@@ -13,8 +13,8 @@ import javax.validation.constraints.NotNull;
     name = "users",
     uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
 public class User extends AbstractEntity {
-  @NotBlank protected String firstname;
-  @NotBlank protected String lastname;
+  @NotBlank protected String firstName;
+  @NotBlank protected String lastName;
   @NotBlank protected String street;
   @NotBlank protected String zip;
   @NotBlank protected String city;
@@ -34,8 +34,8 @@ public class User extends AbstractEntity {
   public User() {}
 
   public User(
-      String firstname,
-      String lastname,
+      String firstName,
+      String lastName,
       String street,
       String zip,
       String city,
@@ -44,8 +44,8 @@ public class User extends AbstractEntity {
       String password,
       String passwordRepeat,
       boolean privacyStatement) {
-    this.firstname = firstname;
-    this.lastname = lastname;
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.street = street;
     this.zip = zip;
     this.city = city;
@@ -56,20 +56,20 @@ public class User extends AbstractEntity {
     this.privacyStatement = privacyStatement;
   }
 
-  public String getFirstname() {
-    return firstname;
+  public String getFirstName() {
+    return firstName;
   }
 
-  public void setFirstname(String firstname) {
-    this.firstname = firstname;
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
   }
 
-  public String getLastname() {
-    return lastname;
+  public String getLastName() {
+    return lastName;
   }
 
-  public void setLastname(String lastname) {
-    this.lastname = lastname;
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
   }
 
   public String getStreet() {

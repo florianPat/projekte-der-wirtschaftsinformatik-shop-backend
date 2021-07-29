@@ -1,5 +1,6 @@
 package fhdw.pdw.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -11,6 +12,7 @@ public class Unit extends AbstractEntity {
   protected int numberOfContainer;
 
   @OneToMany(mappedBy = "unit", cascade = CascadeType.ALL)
+  @JsonIgnore
   protected List<ProductVariant> variants = new ArrayList<>();
 
   public Unit() {}

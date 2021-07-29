@@ -1,5 +1,6 @@
 package fhdw.pdw.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -12,6 +13,7 @@ public class Category extends AbstractEntity {
   protected String cover;
 
   @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+  @JsonIgnore
   protected List<Product> products = new ArrayList<>();
 
   public Category() {}
