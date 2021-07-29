@@ -41,7 +41,7 @@ public class UserDetail implements UserDetails {
 
     return new UserDetail(
         user.getId(),
-        user.getFirstname() + user.getLastname(),
+        user.getFirstName() + user.getLastName(),
         user.getEmail(),
         user.getEmail(),
         user.getPassword(),

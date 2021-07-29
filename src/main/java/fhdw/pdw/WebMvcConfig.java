@@ -13,7 +13,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     registry
         .addMapping("/**")
         .allowedOriginPatterns(
-            "https://fhdw-pdw-shop-frontend*.vercel.app/", "http://localhost:3000/")
+            "https://fhdw-pdw-shop-frontend*.vercel.app/", "http://localhost:3000")
         .allowedMethods("*");
   }
 }
