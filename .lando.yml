@@ -2,6 +2,8 @@ name: pdw-shop-backend
 proxy:
   appserver:
     - pdw-shop-backend.lndo.site
+  mailhog:
+    - pdw-shop-mailhog.lndo.site
 services:
   database:
     type: postgres:13
@@ -22,6 +24,10 @@ services:
         - "5005:5005"
       environment:
         LANDO_DROP_USER: www-data
+  mailhog:
+    type: mailhog
+    hogfrom:
+      - appserver
 tooling:
   compile:
     service: appserver
