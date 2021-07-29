@@ -1,5 +1,6 @@
 package fhdw.pdw.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -11,6 +12,7 @@ public class ProductVariant extends AbstractEntity {
 
   @ManyToOne
   @JoinColumn(name = "product_id")
+  @JsonIgnore
   protected Product product;
 
   @ManyToOne
