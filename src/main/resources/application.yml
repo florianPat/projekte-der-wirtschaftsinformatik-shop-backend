@@ -28,6 +28,11 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 5MB
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:
+    password:
 app:
   jwtSecret: JWTSuperSecretKey
   jwtExpirationInMs: 1800000

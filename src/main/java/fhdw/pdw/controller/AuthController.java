@@ -1,5 +1,6 @@
 package fhdw.pdw.controller;
 
+import fhdw.pdw.email.EmailService;
 import fhdw.pdw.model.Role;
 import fhdw.pdw.model.RoleName;
 import fhdw.pdw.model.User;
@@ -33,18 +34,21 @@ public class AuthController {
   protected RoleRepository roleRepository;
   protected PasswordEncoder passwordEncoder;
   protected JwtTokenProvider jwtTokenProvider;
+  protected EmailService emailService;
 
   public AuthController(
       AuthenticationManager authenticationManager,
       UserRepository userRepository,
       RoleRepository roleRepository,
       PasswordEncoder passwordEncoder,
-      JwtTokenProvider jwtTokenProvider) {
+      JwtTokenProvider jwtTokenProvider,
+      EmailService emailService) {
     this.authenticationManager = authenticationManager;
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
     this.passwordEncoder = passwordEncoder;
     this.jwtTokenProvider = jwtTokenProvider;
+    this.emailService = emailService;
   }
 
   @PostMapping("/register")
@@ -75,6 +79,30 @@ public class AuthController {
             .path("/users/{email}")
             .buildAndExpand(result.getEmail())
             .toUri();
+
+    emailService.sendSimpleMessage(
+        result.getEmail(),
+        "Registrierungsbestätigung sip.shop",
+        "Sehr geehrte Kundein,\nsehr geehrter Kunde,\n\n"
+            + "wir freuen uns, Sie als neuen Kunden bei uns Willkommen zu heißen.\n\n"
+            + "Eine kurze Übersicht über die von Ihnen hinterlegen Daten:\n\n"
+            + result.getFirstName()
+            + " "
+            + result.getLastName()
+            + "\n"
+            + result.getStreet()
+            + ", "
+            + result.getZip()
+            + " "
+            + result.getCity()
+            + "\n"
+            + result.getEmail()
+            + "\n"
+            + "\nStimmen die o.g. Daten überein, dann können Sie diese Email als Registrierungsbestätigung speichern.\n"
+            + "Stimmen die Daten nicht, ändern Sie diese bitte im Portal über Login.\n\n"
+            + "Das sip.shop Team wünscht Ihnen einen guten Einkauf.\n\n"
+            + "In diesem Sinne: Stay hydrated mit sip.shop!");
+
     return ResponseEntity.created(location)
         .body(new ApiResponse(true, "User registered successfully"));
   }

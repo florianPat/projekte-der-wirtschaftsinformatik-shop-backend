@@ -12,6 +12,9 @@ Backend for the shop application developed for the university module "Projekte d
 - Visit [JSON-View](http://pdw-shop-backend.lndo.site:8080/v2/api-docs)
 - Visit [HTML-View](http://pdw-shop-backend.lndo.site:8080/swagger-ui/index.html)
 
+## Mailhog email catcher
+- Visit [Mailhog](http://pdw-shop-mailhog.lndo.site/)
+
 ## Tooling
 - `lando compile`: Build project and hot reload code
 - `lando test`: Run tests with the h2 in-memory database
