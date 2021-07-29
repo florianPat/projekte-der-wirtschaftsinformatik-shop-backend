@@ -12,6 +12,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  mail:
+    host: sendmailhog
+    port: 1025
+    username:
+    password:
 app:
   jwtSecret: JWTSuperSecretKey
   jwtExpirationInMs: 1800000

@@ -14,9 +14,10 @@ public class UserDetail implements UserDetails {
   protected int id;
   protected String name;
   protected String username;
-  @JsonIgnore protected String email;
+  protected String email;
   @JsonIgnore protected String password;
   protected Collection<? extends GrantedAuthority> authorities;
+  protected static final long serialVersionUID = 42L;
 
   public UserDetail(
       int id,
