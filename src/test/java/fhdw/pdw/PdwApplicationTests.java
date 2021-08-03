@@ -7,9 +7,4 @@ import org.springframework.boot.test.context.SpringBootTest;
 class PdwApplicationTests extends AbstractFunctionalTestCase {
   @Test
   void contextLoads() {}
-
-  @Test
-  void testTest() {
-    int i = 4;
-  }
 }

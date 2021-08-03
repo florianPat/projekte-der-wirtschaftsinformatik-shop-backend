@@ -6,11 +6,10 @@ import fhdw.pdw.model.RoleName;
 import fhdw.pdw.model.User;
 import fhdw.pdw.model.dto.ApiResponse;
 import fhdw.pdw.model.dto.JwtAuthenticationResponse;
+import fhdw.pdw.model.dto.LoginUser;
 import fhdw.pdw.repository.RoleRepository;
 import fhdw.pdw.repository.UserRepository;
-import fhdw.pdw.security.CurrentUser;
 import fhdw.pdw.security.JwtTokenProvider;
-import java.net.URI;
 import java.util.Collections;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -20,11 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -74,11 +69,6 @@ public class AuthController {
     user.setRoles(Collections.singleton(roleUser));
 
     User result = userRepository.save(user);
-    URI location =
-        ServletUriComponentsBuilder.fromCurrentContextPath()
-            .path("/users/{email}")
-            .buildAndExpand(result.getEmail())
-            .toUri();
 
     emailService.sendSimpleMessage(
         result.getEmail(),
@@ -103,12 +93,12 @@ public class AuthController {
             + "Das sip.shop Team wünscht Ihnen einen guten Einkauf.\n\n"
             + "In diesem Sinne: Stay hydrated mit sip.shop!");
 
-    return ResponseEntity.created(location)
-        .body(new ApiResponse(true, "User registered successfully"));
+    return new ResponseEntity<>(
+        new ApiResponse(true, "User registered successfully"), HttpStatus.CREATED);
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> loginUser(@Valid @RequestBody User user) {
+  public ResponseEntity<?> loginUser(@Valid @RequestBody LoginUser user) {
     Authentication authentication =
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
@@ -122,8 +112,8 @@ public class AuthController {
     return ResponseEntity.ok(new ApiResponse(true, "User logged out successfully"));
   }
 
-  @PostMapping("/user")
-  public User getUser(@CurrentUser User user) {
-    return user;
+  @GetMapping("/user")
+  public ResponseEntity<?> getUser() {
+    return ResponseEntity.ok(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
   }
 }
