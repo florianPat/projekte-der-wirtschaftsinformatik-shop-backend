@@ -6,9 +6,9 @@ import fhdw.pdw.model.RoleName;
 import fhdw.pdw.model.User;
 import fhdw.pdw.model.dto.ApiResponse;
 import fhdw.pdw.model.dto.JwtAuthenticationResponse;
+import fhdw.pdw.model.dto.LoginUser;
 import fhdw.pdw.repository.RoleRepository;
 import fhdw.pdw.repository.UserRepository;
-import fhdw.pdw.security.CurrentUser;
 import fhdw.pdw.security.JwtTokenProvider;
 import java.util.Collections;
 import javax.validation.Valid;
@@ -19,10 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -101,7 +98,7 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> loginUser(@Valid @RequestBody User user) {
+  public ResponseEntity<?> loginUser(@Valid @RequestBody LoginUser user) {
     Authentication authentication =
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
@@ -115,8 +112,8 @@ public class AuthController {
     return ResponseEntity.ok(new ApiResponse(true, "User logged out successfully"));
   }
 
-  @PostMapping("/user")
-  public User getUser(@CurrentUser User user) {
-    return user;
+  @GetMapping("/user")
+  public ResponseEntity<?> getUser() {
+    return ResponseEntity.ok(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
   }
 }
