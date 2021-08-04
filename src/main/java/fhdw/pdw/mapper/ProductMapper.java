@@ -1,4 +1,4 @@
-package fhdw.pdw.csvimport;
+package fhdw.pdw.mapper;
 
 import fhdw.pdw.model.Category;
 import fhdw.pdw.model.Product;

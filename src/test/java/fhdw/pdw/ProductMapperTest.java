@@ -2,7 +2,7 @@ package fhdw.pdw;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import fhdw.pdw.csvimport.ProductMapper;
+import fhdw.pdw.mapper.ProductMapper;
 import fhdw.pdw.model.Product;
 import fhdw.pdw.model.Unit;
 import fhdw.pdw.model.dto.ProductDto;

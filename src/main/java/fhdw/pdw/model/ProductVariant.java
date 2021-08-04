@@ -1,9 +1,8 @@
 package fhdw.pdw.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import java.util.List;
+import javax.persistence.*;
 
 @Entity
 public class ProductVariant extends AbstractEntity {
@@ -18,6 +17,10 @@ public class ProductVariant extends AbstractEntity {
   @ManyToOne
   @JoinColumn(name = "unit_id")
   protected Unit unit;
+
+  @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL)
+  @JsonIgnore
+  protected List<OrderItem> orderItemList;
 
   public ProductVariant() {}
 
@@ -56,5 +59,13 @@ public class ProductVariant extends AbstractEntity {
 
   public void setUnit(Unit unit) {
     this.unit = unit;
+  }
+
+  public List<OrderItem> getOrderItemList() {
+    return orderItemList;
+  }
+
+  public void setOrderItemList(List<OrderItem> orderItemList) {
+    this.orderItemList = orderItemList;
   }
 }
