@@ -1,11 +1,16 @@
 package fhdw.pdw.controller;
 
 import fhdw.pdw.email.EmailService;
+import fhdw.pdw.mapper.OrderMapper;
 import fhdw.pdw.model.Order;
 import fhdw.pdw.model.OrderItem;
+import fhdw.pdw.model.User;
 import fhdw.pdw.model.dto.ApiResponse;
+import fhdw.pdw.model.dto.OrderItemDto;
 import fhdw.pdw.repository.OrderRepository;
+import fhdw.pdw.repository.UserRepository;
 import fhdw.pdw.security.UserDetail;
+import java.util.Arrays;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -19,20 +24,31 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
   protected OrderRepository orderRepository;
   protected EmailService emailService;
+  protected OrderMapper orderMapper;
+  protected UserRepository userRepository;
 
-  public OrderController(OrderRepository orderRepository, EmailService emailService) {
+  public OrderController(
+      OrderRepository orderRepository,
+      EmailService emailService,
+      OrderMapper orderMapper,
+      UserRepository userRepository) {
     this.orderRepository = orderRepository;
     this.emailService = emailService;
+    this.orderMapper = orderMapper;
+    this.userRepository = userRepository;
   }
 
   @PostMapping("/order")
-  @Secured("ROLE_USER")
-  public ResponseEntity<?> createOrder(@Valid @RequestBody Order order) {
+  public ResponseEntity<?> createOrder(@Valid @RequestBody OrderItemDto[] orderItemDtoList) {
     Object userPrinciple = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     if (!(userPrinciple instanceof UserDetail)) {
       throw new RuntimeException("The logged in user needs to be of type UserDetail!");
     }
     UserDetail userDetail = (UserDetail) userPrinciple;
+
+    Order order = orderMapper.mapFrom(Arrays.asList(orderItemDtoList));
+    User user = userRepository.findByEmail(userDetail.getEmail()).orElseThrow();
+    order.setUser(user);
 
     String orderEmailDetails = "";
     float price = 0.0f;
@@ -40,6 +56,12 @@ public class OrderController {
       orderEmailDetails +=
           "- "
               + orderItem.getProductVariant().getProduct().getName()
+              + " - "
+              + orderItem.getProductVariant().getUnit().getNumberOfContainer()
+              + " x "
+              + orderItem.getProductVariant().getUnit().getAmount()
+              + " "
+              + orderItem.getProductVariant().getUnit().getTitle()
               + " ("
               + orderItem.getQuantity()
               + "x): "

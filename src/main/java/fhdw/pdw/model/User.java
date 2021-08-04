@@ -1,6 +1,7 @@
 package fhdw.pdw.model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.AssertTrue;
@@ -9,9 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(
-    name = "users",
-    uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
+@Table(name = "users")
 public class User extends AbstractEntity {
   @NotBlank protected String firstName;
   @NotBlank protected String lastName;
@@ -30,6 +29,9 @@ public class User extends AbstractEntity {
       joinColumns = @JoinColumn(name = "users_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  protected List<Order> orders;
 
   public User() {}
 
@@ -142,5 +144,13 @@ public class User extends AbstractEntity {
 
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
+  }
+
+  public List<Order> getOrders() {
+    return orders;
+  }
+
+  public void setOrders(List<Order> orders) {
+    this.orders = orders;
   }
 }

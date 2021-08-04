@@ -1,7 +1,7 @@
 package fhdw.pdw.controller;
 
 import fhdw.pdw.csvimport.CsvImporter;
-import fhdw.pdw.csvimport.ProductMapper;
+import fhdw.pdw.mapper.ProductMapper;
 import fhdw.pdw.model.dto.ProductDto;
 import java.util.List;
 import org.springframework.stereotype.Controller;
