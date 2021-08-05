@@ -108,7 +108,8 @@ public class AuthController {
   }
 
   @PostMapping("/logout")
-  public ResponseEntity<?> logoutUser(@RequestBody User user) {
+  public ResponseEntity<?> logoutUser() {
+    SecurityContextHolder.clearContext();
     return ResponseEntity.ok(new ApiResponse(true, "User logged out successfully"));
   }
 
