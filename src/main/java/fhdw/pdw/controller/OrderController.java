@@ -39,6 +39,7 @@ public class OrderController {
   }
 
   @PostMapping("/order")
+  @Secured("ROLE_USER")
   public ResponseEntity<?> createOrder(@Valid @RequestBody OrderItemDto[] orderItemDtoList) {
     Object userPrinciple = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     if (!(userPrinciple instanceof UserDetail)) {
