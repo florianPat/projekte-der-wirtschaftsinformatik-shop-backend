@@ -6,7 +6,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import fhdw.pdw.model.User;
 import fhdw.pdw.model.dto.ApiResponse;
+import fhdw.pdw.model.dto.JwtAuthenticationResponse;
+import fhdw.pdw.model.dto.LoginUser;
 import fhdw.pdw.repository.UserRepository;
+import fhdw.pdw.security.UserDetail;
+import java.util.Optional;
 import java.util.stream.Stream;
 import javax.mail.internet.MimeMessage;
 import org.junit.jupiter.api.Test;
@@ -14,8 +18,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthControllerTest extends AbstractHttpRequestTest {
@@ -74,6 +77,83 @@ public class AuthControllerTest extends AbstractHttpRequestTest {
             || HttpStatus.INTERNAL_SERVER_ERROR == response.getStatusCode());
   }
 
+  @Test
+  public void loginShouldSucceedWithValidCredentials() {
+    User user = createUser();
+
+    ResponseEntity<ApiResponse> registerResponse = postRegisterRequestWith(user);
+    assertEquals(HttpStatus.CREATED, registerResponse.getStatusCode());
+
+    ResponseEntity<JwtAuthenticationResponse> loginResponse =
+        postLoginRequestWith(new LoginUser(user.getEmail(), user.getPassword()));
+    assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
+    JwtAuthenticationResponse loginResponseBody = loginResponse.getBody();
+    assertNotNull(loginResponseBody);
+    assertThat(loginResponseBody).hasFieldOrProperty("token");
+    assertThat(loginResponseBody).hasFieldOrPropertyWithValue("tokenType", "Bearer");
+
+    ResponseEntity<UserDetail> userResponse = getUserRequest(loginResponseBody);
+    assertEquals(HttpStatus.OK, userResponse.getStatusCode());
+    Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
+    assertTrue(userOptional.isPresent());
+    UserDetail userDetail = userResponse.getBody();
+    assertNotNull(userDetail);
+    assertEquals(userOptional.get().getId(), userDetail.getId());
+  }
+
+  @Test
+  public void logoutShouldSucceed() {
+    User user = createUser();
+
+    ResponseEntity<ApiResponse> registerResponse = postRegisterRequestWith(user);
+    assertEquals(HttpStatus.CREATED, registerResponse.getStatusCode());
+
+    ResponseEntity<ApiResponse> logoutResponse = postLogout();
+    assertEquals(HttpStatus.OK, logoutResponse.getStatusCode());
+
+    ResponseEntity<JwtAuthenticationResponse> loginResponse =
+        postLoginRequestWith(new LoginUser(user.getEmail(), user.getPassword()));
+    assertEquals(HttpStatus.OK, loginResponse.getStatusCode());
+    JwtAuthenticationResponse loginResponseBody = loginResponse.getBody();
+    assertNotNull(loginResponseBody);
+
+    ResponseEntity<UserDetail> userResponse = getUserRequest(loginResponseBody);
+    assertEquals(HttpStatus.OK, userResponse.getStatusCode());
+
+    logoutResponse = postLogout();
+    assertEquals(HttpStatus.OK, logoutResponse.getStatusCode());
+    assertNotNull(loginResponse.getBody());
+  }
+
+  @Test
+  public void retrieveUserWithoutTokenFails() {
+    ResponseEntity<UserDetail> userResponse =
+        getUserRequest(new JwtAuthenticationResponse("this-is-not-a-token"));
+    assertNotNull(userResponse);
+    assertEquals(HttpStatus.UNAUTHORIZED, userResponse.getStatusCode());
+  }
+
+  @Test
+  public void loginShouldNotSucceedWithNotExistingUser() {
+    User user = createUser();
+    ResponseEntity<JwtAuthenticationResponse> response =
+        postLoginRequestWith(new LoginUser(user.getEmail(), user.getPassword()));
+    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+  }
+
+  @Test
+  public void loginShouldNotSucceedWithInvalidPassword() {
+    User user = createUser();
+
+    ResponseEntity<ApiResponse> registerResponse = postRegisterRequestWith(user);
+    assertEquals(HttpStatus.CREATED, registerResponse.getStatusCode());
+    assertThat(registerResponse.getBody()).hasFieldOrPropertyWithValue("success", true);
+
+    ResponseEntity<JwtAuthenticationResponse> loginResponse =
+        postLoginRequestWith(new LoginUser(user.getEmail(), "Not-the-password"));
+    assertEquals(HttpStatus.UNAUTHORIZED, loginResponse.getStatusCode());
+  }
+
   protected static User createUser() {
     User user = new User();
     user.setFirstName("Flo");
@@ -91,7 +171,33 @@ public class AuthControllerTest extends AbstractHttpRequestTest {
   }
 
   protected ResponseEntity<ApiResponse> postRegisterRequestWith(User user) {
-    return restTemplate.postForEntity(
-        "http://localhost:" + port + "/api/auth/register", user, ApiResponse.class);
+    return post("/api/auth/register", user, ApiResponse.class);
+  }
+
+  protected ResponseEntity<JwtAuthenticationResponse> postLoginRequestWith(LoginUser loginUser) {
+    return post("/api/auth/login", loginUser, JwtAuthenticationResponse.class);
+  }
+
+  protected ResponseEntity<UserDetail> getUserRequest(
+      JwtAuthenticationResponse jwtAuthenticationResponse) {
+    HttpHeaders headers =
+        new HttpHeaders() {
+          {
+            set(
+                "Authorization",
+                jwtAuthenticationResponse.getTokenType()
+                    + " "
+                    + jwtAuthenticationResponse.getToken());
+          }
+        };
+    return restTemplate.exchange(
+        "http://localhost:" + port + "/api/auth/user",
+        HttpMethod.GET,
+        new HttpEntity<>(headers),
+        UserDetail.class);
+  }
+
+  protected ResponseEntity<ApiResponse> postLogout() {
+    return post("/api/auth/logout", null, ApiResponse.class);
   }
 }
