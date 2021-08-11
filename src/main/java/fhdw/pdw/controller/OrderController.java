@@ -98,4 +98,18 @@ public class OrderController {
   public Order getOrder(@PathVariable int id) {
     return orderRepository.findById(id).get();
   }
+
+  @GetMapping("/orders/me")
+  @Secured("ROLE_USER")
+  public List<Order> getOrderByLoggedInUser() {
+    Object userPrinciple = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    if (!(userPrinciple instanceof UserDetail)) {
+      throw new RuntimeException("The logged in user needs to be of type UserDetail!");
+    }
+    UserDetail userDetail = (UserDetail) userPrinciple;
+
+    User user = userRepository.findByEmail(userDetail.getEmail()).orElseThrow();
+
+    return orderRepository.findByUserId(user.getId());
+  }
 }
