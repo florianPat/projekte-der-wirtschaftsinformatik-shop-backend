@@ -10,6 +10,7 @@ import fhdw.pdw.model.dto.LoginUser;
 import fhdw.pdw.repository.RoleRepository;
 import fhdw.pdw.repository.UserRepository;
 import fhdw.pdw.security.JwtTokenProvider;
+import fhdw.pdw.security.UserDetail;
 import java.util.Collections;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -104,17 +105,19 @@ public class AuthController {
             new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
     SecurityContextHolder.getContext().setAuthentication(authentication);
     String jwt = jwtTokenProvider.generateToken(authentication);
-    return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
-  }
-
-  @PostMapping("/logout")
-  public ResponseEntity<?> logoutUser() {
-    SecurityContextHolder.clearContext();
-    return ResponseEntity.ok(new ApiResponse(true, "User logged out successfully"));
+    return new ResponseEntity<>(new JwtAuthenticationResponse(jwt), HttpStatus.OK);
   }
 
   @GetMapping("/user")
   public ResponseEntity<?> getUser() {
-    return ResponseEntity.ok(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    if ("anonymousUser" == principal) {
+      return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+    if (!(principal instanceof UserDetail)) {
+      throw new RuntimeException("The user should be of type UserDetail!");
+    }
+    UserDetail user = (UserDetail) principal;
+    return new ResponseEntity<>(user, HttpStatus.OK);
   }
 }

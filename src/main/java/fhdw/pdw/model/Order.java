@@ -8,6 +8,8 @@ public class Order extends AbstractEntity {
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
   protected List<OrderItem> orderItemList;
 
+  protected OrderStatus status = OrderStatus.ORDERED;
+
   @ManyToOne
   @JoinColumn(name = "user_id")
   protected User user;
@@ -28,5 +30,13 @@ public class Order extends AbstractEntity {
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  public OrderStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(OrderStatus status) {
+    this.status = status;
   }
 }

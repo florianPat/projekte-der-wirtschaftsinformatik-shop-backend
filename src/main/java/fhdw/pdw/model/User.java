@@ -19,6 +19,7 @@ public class User extends AbstractEntity {
   @NotBlank protected String city;
   @NotBlank protected String birthday;
   @NotBlank @Email protected String email;
+  // TODO: Do not serialize this if you return this from an endpoint ever!
   @NotBlank protected String password;
   @NotBlank protected String passwordRepeat;
   @NotNull @AssertTrue protected boolean privacyStatement;
