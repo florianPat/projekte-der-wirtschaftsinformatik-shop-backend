@@ -35,7 +35,7 @@ public class ProductMapper {
     List<Product> result = new ArrayList<>();
 
     for (ProductDto dto : dtos) {
-      Product product = new Product(dto.getName(), dto.getCover());
+      Product product = new Product(dto.getName(), dto.getCover(), dto.getMinAge());
       product.setProducer(dto.getProducer());
       product.setAllergens(dto.getAllergens());
       product.setCategory(getOrCreateCategory(dto.getCategory()));

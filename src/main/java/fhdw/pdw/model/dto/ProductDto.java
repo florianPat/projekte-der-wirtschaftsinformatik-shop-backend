@@ -8,6 +8,7 @@ public class ProductDto {
   protected float price;
   protected String allergens;
   protected String cover;
+  protected int minAge;
 
   public ProductDto() {}
 
@@ -18,7 +19,8 @@ public class ProductDto {
       String amount,
       float price,
       String allergens,
-      String cover) {
+      String cover,
+      int minAge) {
     this.name = name;
     this.category = category;
     this.producer = producer;
@@ -26,6 +28,7 @@ public class ProductDto {
     this.price = price;
     this.allergens = allergens;
     this.cover = cover;
+    this.minAge = minAge;
   }
 
   public String getName() {
@@ -90,5 +93,13 @@ public class ProductDto {
 
   public void setCover(String cover) {
     this.cover = cover;
+  }
+
+  public int getMinAge() {
+    return minAge;
+  }
+
+  public void setMinAge(int minAge) {
+    this.minAge = minAge;
   }
 }

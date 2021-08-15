@@ -24,7 +24,14 @@ public class ProductMapperTest extends AbstractFunctionalTestCase {
     List<ProductDto> dtos = new ArrayList<>();
     dtos.add(
         new ProductDto(
-            "Evain Wasser", "Wasser", "Evian", "6 x 0.5 L", 12.5f, "12, 8", "https://ein-link"));
+            "Evain Wasser",
+            "Wasser",
+            "Evian",
+            "6 x 0.5 L",
+            12.5f,
+            "12, 8",
+            "https://ein-link",
+            16));
     List<Product> products = productMapper.mapFrom(dtos);
     assertEquals(1, products.size());
     Product product = products.get(0);
@@ -39,6 +46,7 @@ public class ProductMapperTest extends AbstractFunctionalTestCase {
     assertEquals(12.5f, product.getVariants().get(0).getPrice());
     assertEquals("12, 8", product.getAllergens());
     assertEquals("https://ein-link", product.getCover());
+    assertEquals(16, product.getMinAge());
 
     productMapper.mapAndReplaceFrom(dtos);
     assertEquals(1, productRepository.findAll().size());

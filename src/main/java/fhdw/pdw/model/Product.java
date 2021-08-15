@@ -27,9 +27,10 @@ public class Product extends AbstractEntity {
 
   public Product() {}
 
-  public Product(String name, String cover) {
+  public Product(String name, String cover, int minAge) {
     this.name = name;
     this.cover = cover;
+    this.minAge = minAge;
   }
 
   public Product(String name, String cover, Category category, String producer, int minAge) {
