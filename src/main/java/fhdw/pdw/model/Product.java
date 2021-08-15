@@ -23,18 +23,22 @@ public class Product extends AbstractEntity {
   // @ManyToMany(mappedBy = "products")
   protected String allergens;
 
+  protected int minAge;
+
   public Product() {}
 
-  public Product(String name, String cover) {
+  public Product(String name, String cover, int minAge) {
     this.name = name;
     this.cover = cover;
+    this.minAge = minAge;
   }
 
-  public Product(String name, String cover, Category category, String producer) {
+  public Product(String name, String cover, Category category, String producer, int minAge) {
     this.name = name;
     this.cover = cover;
     this.category = category;
     this.producer = producer;
+    this.minAge = minAge;
   }
 
   public String getName() {
@@ -91,5 +95,13 @@ public class Product extends AbstractEntity {
 
   public void setAllergens(String allergens) {
     this.allergens = allergens;
+  }
+
+  public int getMinAge() {
+    return minAge;
+  }
+
+  public void setMinAge(int minAge) {
+    this.minAge = minAge;
   }
 }

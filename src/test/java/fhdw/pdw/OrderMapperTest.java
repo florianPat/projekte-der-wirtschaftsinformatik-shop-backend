@@ -52,7 +52,7 @@ public class OrderMapperTest extends AbstractFunctionalTestCase {
   protected Product setupProductFixtures() {
     Category category = categoryRepository.findByTitle(CATEGORY_NAME);
     Product product =
-        new Product(PRODUCT_NAME, "https://cover-wasser", category, "Wasser Producer");
+        new Product(PRODUCT_NAME, "https://cover-wasser", category, "Wasser Producer", 0);
     product.setAllergens("1, 2");
     List<ProductVariant> variants = new ArrayList<>();
     Unit unit = new Unit("L", 5.5f, 3);

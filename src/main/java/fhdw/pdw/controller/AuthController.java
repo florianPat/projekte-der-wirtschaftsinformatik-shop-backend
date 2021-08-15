@@ -12,6 +12,7 @@ import fhdw.pdw.repository.UserRepository;
 import fhdw.pdw.security.JwtTokenProvider;
 import fhdw.pdw.security.UserDetail;
 import java.util.Collections;
+import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -117,7 +118,11 @@ public class AuthController {
     if (!(principal instanceof UserDetail)) {
       throw new RuntimeException("The user should be of type UserDetail!");
     }
-    UserDetail user = (UserDetail) principal;
-    return new ResponseEntity<>(user, HttpStatus.OK);
+    UserDetail userDetail = (UserDetail) principal;
+    Optional<User> userOptional = userRepository.findByEmail(userDetail.getEmail());
+    if (userOptional.isEmpty()) {
+      throw new RuntimeException("The user entity was not found through the UserDetails!");
+    }
+    return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
   }
 }

@@ -1,5 +1,6 @@
 package fhdw.pdw.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,10 +30,14 @@ public class User extends AbstractEntity {
       name = "users_roles",
       joinColumns = @JoinColumn(name = "users_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private Set<Role> roles = new HashSet<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   protected List<Order> orders;
+
+  @NotNull protected boolean hasVerifiedAge;
 
   public User() {}
 
@@ -46,7 +51,8 @@ public class User extends AbstractEntity {
       String email,
       String password,
       String passwordRepeat,
-      boolean privacyStatement) {
+      boolean privacyStatement,
+      boolean hasVerifiedAge) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.street = street;
@@ -57,6 +63,7 @@ public class User extends AbstractEntity {
     this.password = password;
     this.passwordRepeat = passwordRepeat;
     this.privacyStatement = privacyStatement;
+    this.hasVerifiedAge = hasVerifiedAge;
   }
 
   public String getFirstName() {
@@ -153,5 +160,13 @@ public class User extends AbstractEntity {
 
   public void setOrders(List<Order> orders) {
     this.orders = orders;
+  }
+
+  public boolean isHasVerifiedAge() {
+    return hasVerifiedAge;
+  }
+
+  public void setHasVerifiedAge(boolean hasVerifiedAge) {
+    this.hasVerifiedAge = hasVerifiedAge;
   }
 }
