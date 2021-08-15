@@ -7,11 +7,13 @@ import fhdw.pdw.model.OrderItem;
 import fhdw.pdw.model.User;
 import fhdw.pdw.model.dto.ApiResponse;
 import fhdw.pdw.model.dto.OrderItemDto;
+import fhdw.pdw.model.dto.PatchOrderStatusDto;
 import fhdw.pdw.repository.OrderRepository;
 import fhdw.pdw.repository.UserRepository;
 import fhdw.pdw.security.UserDetail;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -111,5 +113,20 @@ public class OrderController {
     User user = userRepository.findByEmail(userDetail.getEmail()).orElseThrow();
 
     return orderRepository.findByUserId(user.getId());
+  }
+
+  @PatchMapping("/orders/{id}")
+  @Secured("ROLE_USER")
+  public ResponseEntity<?> patchOrderStatus(@PathVariable int id, @Valid @RequestBody PatchOrderStatusDto patchOrderStatusDto) {
+    Optional<Order> orderOptional = orderRepository.findById(id);
+    if (orderOptional.isEmpty()) {
+      return new ResponseEntity<>(new ApiResponse(false, "Order not found"), HttpStatus.NOT_FOUND);
+    }
+
+    Order order = orderOptional.get();
+    order.setStatus(patchOrderStatusDto.getStatus());
+    orderRepository.save(order);
+
+    return new ResponseEntity<>(new ApiResponse(true, "Order status changed successfully"), HttpStatus.OK);
   }
 }

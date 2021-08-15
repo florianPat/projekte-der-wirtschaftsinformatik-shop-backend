@@ -31,6 +31,7 @@ public class UserController {
     this.passwordEncoder = passwordEncoder;
   }
 
+  // TODO: Add error reporting
   @PutMapping("/user")
   @Secured("ROLE_USER")
   public ResponseEntity<?> putUser(@RequestBody User putUser) {
