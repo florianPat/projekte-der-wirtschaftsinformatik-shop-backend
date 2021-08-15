@@ -1,5 +1,6 @@
 package fhdw.pdw.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,9 +30,11 @@ public class User extends AbstractEntity {
       name = "users_roles",
       joinColumns = @JoinColumn(name = "users_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private Set<Role> roles = new HashSet<>();
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   protected List<Order> orders;
 
   public User() {}

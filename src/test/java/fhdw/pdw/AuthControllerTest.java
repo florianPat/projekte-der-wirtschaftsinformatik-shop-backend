@@ -9,7 +9,6 @@ import fhdw.pdw.model.dto.ApiResponse;
 import fhdw.pdw.model.dto.JwtAuthenticationResponse;
 import fhdw.pdw.model.dto.LoginUser;
 import fhdw.pdw.repository.UserRepository;
-import fhdw.pdw.security.UserDetail;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.mail.internet.MimeMessage;
@@ -92,13 +91,14 @@ public class AuthControllerTest extends AbstractHttpRequestTest {
     assertThat(loginResponseBody).hasFieldOrProperty("token");
     assertThat(loginResponseBody).hasFieldOrPropertyWithValue("tokenType", "Bearer");
 
-    ResponseEntity<UserDetail> userResponse = getUserRequest(loginResponseBody);
+    ResponseEntity<User> userResponse = getUserRequest(loginResponseBody);
     assertEquals(HttpStatus.OK, userResponse.getStatusCode());
+    User userResponseBody = userResponse.getBody();
+    assertNotNull(userResponseBody);
+    assertEquals(user.getEmail(), userResponseBody.getEmail());
     Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
     assertTrue(userOptional.isPresent());
-    UserDetail userDetail = userResponse.getBody();
-    assertNotNull(userDetail);
-    assertEquals(userOptional.get().getId(), userDetail.getId());
+    assertEquals(userOptional.get().getId(), userResponseBody.getId());
   }
 
   @Test
@@ -117,7 +117,7 @@ public class AuthControllerTest extends AbstractHttpRequestTest {
     JwtAuthenticationResponse loginResponseBody = loginResponse.getBody();
     assertNotNull(loginResponseBody);
 
-    ResponseEntity<UserDetail> userResponse = getUserRequest(loginResponseBody);
+    ResponseEntity<User> userResponse = getUserRequest(loginResponseBody);
     assertEquals(HttpStatus.OK, userResponse.getStatusCode());
 
     logoutResponse = postLogout();
@@ -127,7 +127,7 @@ public class AuthControllerTest extends AbstractHttpRequestTest {
 
   @Test
   public void retrieveUserWithoutTokenFails() {
-    ResponseEntity<UserDetail> userResponse =
+    ResponseEntity<User> userResponse =
         getUserRequest(new JwtAuthenticationResponse("this-is-not-a-token"));
     assertNotNull(userResponse);
     assertEquals(HttpStatus.UNAUTHORIZED, userResponse.getStatusCode());
@@ -178,7 +178,7 @@ public class AuthControllerTest extends AbstractHttpRequestTest {
     return post("/api/auth/login", loginUser, JwtAuthenticationResponse.class);
   }
 
-  protected ResponseEntity<UserDetail> getUserRequest(
+  protected ResponseEntity<User> getUserRequest(
       JwtAuthenticationResponse jwtAuthenticationResponse) {
     HttpHeaders headers =
         new HttpHeaders() {
@@ -194,7 +194,7 @@ public class AuthControllerTest extends AbstractHttpRequestTest {
         "http://localhost:" + port + "/api/auth/user",
         HttpMethod.GET,
         new HttpEntity<>(headers),
-        UserDetail.class);
+        User.class);
   }
 
   protected ResponseEntity<ApiResponse> postLogout() {
