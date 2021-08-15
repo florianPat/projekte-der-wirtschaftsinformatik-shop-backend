@@ -72,7 +72,9 @@ public class OrderController {
               + "€\n";
       price += orderItem.getQuantity() * orderItem.getProductVariant().getPrice();
     }
-    orderEmailDetails += "\nGesamtpreis: " + price;
+    orderEmailDetails += "\nVersandkosten: 3.00€";
+    price += 3.0f;
+    orderEmailDetails += "\nGesamtpreis: " + price + "€";
 
     emailService.sendSimpleMessage(
         userDetail.getEmail(),
@@ -117,7 +119,8 @@ public class OrderController {
 
   @PatchMapping("/orders/{id}")
   @Secured("ROLE_USER")
-  public ResponseEntity<?> patchOrderStatus(@PathVariable int id, @Valid @RequestBody PatchOrderStatusDto patchOrderStatusDto) {
+  public ResponseEntity<?> patchOrderStatus(
+      @PathVariable int id, @Valid @RequestBody PatchOrderStatusDto patchOrderStatusDto) {
     Optional<Order> orderOptional = orderRepository.findById(id);
     if (orderOptional.isEmpty()) {
       return new ResponseEntity<>(new ApiResponse(false, "Order not found"), HttpStatus.NOT_FOUND);
@@ -127,6 +130,7 @@ public class OrderController {
     order.setStatus(patchOrderStatusDto.getStatus());
     orderRepository.save(order);
 
-    return new ResponseEntity<>(new ApiResponse(true, "Order status changed successfully"), HttpStatus.OK);
+    return new ResponseEntity<>(
+        new ApiResponse(true, "Order status changed successfully"), HttpStatus.OK);
   }
 }
