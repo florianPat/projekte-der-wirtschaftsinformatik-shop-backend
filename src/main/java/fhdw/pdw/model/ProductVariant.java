@@ -1,6 +1,5 @@
 package fhdw.pdw.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.*;
 
@@ -11,7 +10,6 @@ public class ProductVariant extends AbstractEntity {
 
   @ManyToOne
   @JoinColumn(name = "product_id")
-  @JsonIgnore
   protected Product product;
 
   @ManyToOne
@@ -19,7 +17,6 @@ public class ProductVariant extends AbstractEntity {
   protected Unit unit;
 
   @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL)
-  @JsonIgnore
   protected List<OrderItem> orderItemList;
 
   public ProductVariant() {}

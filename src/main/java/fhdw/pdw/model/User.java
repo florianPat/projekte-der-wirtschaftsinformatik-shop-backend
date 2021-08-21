@@ -1,9 +1,7 @@
 package fhdw.pdw.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.HashSet;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Email;
@@ -20,21 +18,21 @@ public class User extends AbstractEntity {
   @NotBlank protected String city;
   @NotBlank protected String birthday;
   @NotBlank @Email protected String email;
-  // TODO: Do not serialize this if you return this from an endpoint ever!
+  // @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @NotBlank protected String password;
+  // @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @NotBlank protected String passwordRepeat;
   @NotNull @AssertTrue protected boolean privacyStatement;
 
-  @ManyToMany(fetch = FetchType.LAZY)
+  @JsonIgnore
+  @ManyToMany
   @JoinTable(
       name = "users_roles",
       joinColumns = @JoinColumn(name = "users_id"),
       inverseJoinColumns = @JoinColumn(name = "role_id"))
-  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-  private Set<Role> roles = new HashSet<>();
+  protected List<Role> roles;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   protected List<Order> orders;
 
   @NotNull protected boolean hasVerifiedAge;
@@ -146,11 +144,11 @@ public class User extends AbstractEntity {
     this.privacyStatement = privacyStatement;
   }
 
-  public Set<Role> getRoles() {
+  public List<Role> getRoles() {
     return roles;
   }
 
-  public void setRoles(Set<Role> roles) {
+  public void setRoles(List<Role> roles) {
     this.roles = roles;
   }
 

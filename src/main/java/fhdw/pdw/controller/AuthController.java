@@ -68,7 +68,7 @@ public class AuthController {
         roleRepository
             .findByName(RoleName.ROLE_USER)
             .orElseThrow(() -> new RuntimeException("User role not found!"));
-    user.setRoles(Collections.singleton(roleUser));
+    user.setRoles(Collections.singletonList(roleUser));
 
     User result = userRepository.save(user);
 
