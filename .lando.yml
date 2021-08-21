@@ -14,14 +14,17 @@ services:
   appserver:
     type: compose
     build:
+      - apk update && apk upgrade && apk add bash
       - chmod +x /app/docker/lando/java/cmd.sh
     scanner: false
     services:
-      build: ./docker/lando/java
+      image: adoptopenjdk/openjdk11:alpine
       command: /app/docker/lando/java/cmd.sh
       ports:
         - "8080:8080"
         - "5005:5005"
+      expose:
+        - "587" # for gmail mail sending
       environment:
         LANDO_DROP_USER: www-data
   mailhog:
