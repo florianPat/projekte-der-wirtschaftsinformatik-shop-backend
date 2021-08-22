@@ -1,6 +1,7 @@
 package fhdw.pdw.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.AssertTrue;
@@ -9,6 +10,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id",
+    scope = User.class)
 @Table(name = "users")
 public class User extends AbstractEntity {
   @NotBlank protected String firstName;
@@ -24,7 +29,6 @@ public class User extends AbstractEntity {
   @NotBlank protected String passwordRepeat;
   @NotNull @AssertTrue protected boolean privacyStatement;
 
-  @JsonIgnore
   @ManyToMany
   @JoinTable(
       name = "users_roles",

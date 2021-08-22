@@ -1,10 +1,16 @@
 package fhdw.pdw.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
 @Entity
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id",
+    scope = Unit.class)
 public class Unit extends AbstractEntity {
   protected String title;
   protected float amount;

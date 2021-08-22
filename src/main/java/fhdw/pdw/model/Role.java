@@ -1,5 +1,7 @@
 package fhdw.pdw.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -7,6 +9,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 
 @Entity
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id",
+    scope = Role.class)
 public class Role extends AbstractEntity {
   @Enumerated(EnumType.STRING)
   protected RoleName name;

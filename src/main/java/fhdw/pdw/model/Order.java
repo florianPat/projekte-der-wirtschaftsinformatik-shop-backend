@@ -1,10 +1,16 @@
 package fhdw.pdw.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 
 @Entity(name = "orders")
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id",
+    scope = Order.class)
 public class Order extends AbstractEntity {
   @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
   protected List<OrderItem> orderItemList;

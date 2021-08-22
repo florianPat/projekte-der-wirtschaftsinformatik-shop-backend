@@ -1,9 +1,15 @@
 package fhdw.pdw.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.List;
 import javax.persistence.*;
 
 @Entity
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id",
+    scope = ProductVariant.class)
 public class ProductVariant extends AbstractEntity {
   protected int stock;
   protected float price;

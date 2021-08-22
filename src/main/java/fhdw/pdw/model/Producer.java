@@ -1,5 +1,7 @@
 package fhdw.pdw.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -7,6 +9,10 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 @Entity
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id",
+    scope = Producer.class)
 public class Producer extends AbstractEntity {
   protected String name;
 

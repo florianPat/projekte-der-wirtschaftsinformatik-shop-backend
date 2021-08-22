@@ -12,10 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api")
 @RestController
@@ -31,8 +28,7 @@ public class UserController {
     this.passwordEncoder = passwordEncoder;
   }
 
-  // TODO: Add error reporting
-  @PutMapping("/user")
+  @PatchMapping("/user")
   @Secured("ROLE_USER")
   public ResponseEntity<?> putUser(@RequestBody User putUser) {
     Object userPrinciple = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -62,6 +58,10 @@ public class UserController {
                           + field.getName().substring(1))
                   .invoke(putUser);
 
+          if (propertyValue == null) {
+            continue;
+          }
+
           if (field.getName().equals("email")) {
             String putUserEmail = putUser.getEmail();
             if (userRepository.existsByEmail(putUserEmail)
@@ -86,7 +86,8 @@ public class UserController {
               .invoke(user, propertyValue);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
           e.printStackTrace();
-          return new ResponseEntity<>(new ApiResponse(false, ""), HttpStatus.INTERNAL_SERVER_ERROR);
+          return new ResponseEntity<>(
+              new ApiResponse(false, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
       }
     }

@@ -44,7 +44,6 @@ public class CustomBeanSerializerFactory extends BeanSerializerFactory {
       boolean staticTyping,
       TypeSerializer vts,
       JsonSerializer<Object> valueSerializer) {
-    System.out.println("BUILDING COLLECTION SERIALIZER");
     return new CustomCollectionSerializer(elemType, staticTyping, vts, valueSerializer);
   }
 }
