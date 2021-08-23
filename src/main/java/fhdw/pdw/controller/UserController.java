@@ -28,7 +28,7 @@ public class UserController {
     this.passwordEncoder = passwordEncoder;
   }
 
-  @PatchMapping("/user")
+  @PatchMapping("/users")
   @Secured("ROLE_USER")
   public ResponseEntity<?> putUser(@RequestBody User putUser) {
     Object userPrinciple = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
