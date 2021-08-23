@@ -39,8 +39,6 @@ public class UserController {
 
     User user = userRepository.findByEmail(userDetail.getEmail()).orElseThrow();
 
-    boolean shouldReauthenticate = false;
-
     for (Field field : putUser.getClass().getDeclaredFields()) {
       if (validator.validateProperty(putUser, field.getName()).isEmpty()) {
         try {
@@ -74,7 +72,6 @@ public class UserController {
               continue;
             }
             propertyValue = passwordEncoder.encode((CharSequence) propertyValue);
-            shouldReauthenticate = true;
           }
 
           user.getClass()
@@ -96,12 +93,6 @@ public class UserController {
 
     userRepository.save(user);
 
-    if (shouldReauthenticate) {
-      return new ResponseEntity<>(
-          new ApiResponse(true, "User updated successfully and should authenticate again"),
-          HttpStatus.OK);
-    }
-
-    return new ResponseEntity<>(new ApiResponse(true, "User updated successfully"), HttpStatus.OK);
+    return new ResponseEntity<>(user, HttpStatus.OK);
   }
 }

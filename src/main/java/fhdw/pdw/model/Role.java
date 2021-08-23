@@ -1,6 +1,7 @@
 package fhdw.pdw.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.List;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ public class Role extends AbstractEntity {
   @Enumerated(EnumType.STRING)
   protected RoleName name;
 
+  @JsonIgnore
   @ManyToMany(mappedBy = "roles")
   protected List<User> users;
 
