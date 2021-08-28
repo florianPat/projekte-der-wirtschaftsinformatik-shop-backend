@@ -50,6 +50,3 @@ tooling:
   hibernateSchema:
     service: appserver
     cmd: cd /app && ./gradlew -Dspring.profiles.active=generatesql bootRun
-  flywayMigrate:
-    service: appserver
-    cmd: cd /app && ./gradlew bootRun
