@@ -1,19 +1,24 @@
 package fhdw.pdw.controller;
 
 import fhdw.pdw.email.EmailService;
+import fhdw.pdw.mapper.ConstraintViolationSetToErrorResponseMapper;
+import fhdw.pdw.mapper.UserMapper;
 import fhdw.pdw.model.Role;
 import fhdw.pdw.model.RoleName;
 import fhdw.pdw.model.User;
-import fhdw.pdw.model.dto.ApiResponse;
 import fhdw.pdw.model.dto.JwtAuthenticationResponse;
 import fhdw.pdw.model.dto.LoginUser;
+import fhdw.pdw.model.dto.UserDto;
 import fhdw.pdw.repository.RoleRepository;
 import fhdw.pdw.repository.UserRepository;
 import fhdw.pdw.security.JwtTokenProvider;
 import fhdw.pdw.security.UserDetail;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
+import javax.validation.Validator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +37,9 @@ public class AuthController {
   protected PasswordEncoder passwordEncoder;
   protected JwtTokenProvider jwtTokenProvider;
   protected EmailService emailService;
+  protected UserMapper userMapper;
+  protected Validator validator;
+  protected ConstraintViolationSetToErrorResponseMapper constraintViolationSetToErrorResponseMapper;
 
   public AuthController(
       AuthenticationManager authenticationManager,
@@ -39,30 +47,24 @@ public class AuthController {
       RoleRepository roleRepository,
       PasswordEncoder passwordEncoder,
       JwtTokenProvider jwtTokenProvider,
-      EmailService emailService) {
+      EmailService emailService,
+      UserMapper userMapper,
+      Validator validator,
+      ConstraintViolationSetToErrorResponseMapper constraintViolationSetToErrorResponseMapper) {
     this.authenticationManager = authenticationManager;
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
     this.passwordEncoder = passwordEncoder;
     this.jwtTokenProvider = jwtTokenProvider;
     this.emailService = emailService;
+    this.userMapper = userMapper;
+    this.validator = validator;
+    this.constraintViolationSetToErrorResponseMapper = constraintViolationSetToErrorResponseMapper;
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> registerUser(@Valid @RequestBody User user) {
-    if (userRepository.existsByEmail(user.getEmail())) {
-      return new ResponseEntity<>(
-          new ApiResponse(false, "Email is already taken!"), HttpStatus.BAD_REQUEST);
-    }
-
-    if (!user.getPassword().equals(user.getPasswordRepeat())) {
-      return new ResponseEntity<>(
-          new ApiResponse(false, "Repeated password is not equal to the password!"),
-          HttpStatus.BAD_REQUEST);
-    }
-
+  public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto user) {
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    user.setPasswordRepeat("this_is_the_repeated_password");
 
     Role roleUser =
         roleRepository
@@ -70,7 +72,12 @@ public class AuthController {
             .orElseThrow(() -> new RuntimeException("User role not found!"));
     user.setRoles(Collections.singletonList(roleUser));
 
-    User result = userRepository.save(user);
+    User persistUser = userMapper.mapFrom(user);
+    Set<ConstraintViolation<User>> violations = validator.validate(persistUser);
+    if (!violations.isEmpty()) {
+      return constraintViolationSetToErrorResponseMapper.mapFrom(violations);
+    }
+    User result = userRepository.save(persistUser);
 
     emailService.sendSimpleMessage(
         result.getEmail(),
@@ -95,8 +102,7 @@ public class AuthController {
             + "Das sip.shop Team wünscht Ihnen einen guten Einkauf.\n\n"
             + "In diesem Sinne: Stay hydrated mit sip.shop!");
 
-    return new ResponseEntity<>(
-        new ApiResponse(true, "User registered successfully"), HttpStatus.CREATED);
+    return new ResponseEntity<>(result, HttpStatus.CREATED);
   }
 
   @PostMapping("/login")
@@ -119,7 +125,7 @@ public class AuthController {
       throw new RuntimeException("The user should be of type UserDetail!");
     }
     UserDetail userDetail = (UserDetail) principal;
-    Optional<User> userOptional = userRepository.findByEmail(userDetail.getEmail());
+    Optional<User> userOptional = userRepository.findByEmailIgnoreCase(userDetail.getEmail());
     if (userOptional.isEmpty()) {
       throw new RuntimeException("The user entity was not found through the UserDetails!");
     }

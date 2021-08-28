@@ -1,19 +1,15 @@
-package fhdw.pdw.model;
+package fhdw.pdw.model.dto;
 
-import com.fasterxml.jackson.annotation.*;
-import fhdw.pdw.constraints.UniqueUserEmail;
+import fhdw.pdw.constraints.PasswordAndAPasswordRepeatMatch;
+import fhdw.pdw.model.Role;
 import java.util.List;
-import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-@Entity
-@JsonIdentityInfo(
-    generator = ObjectIdGenerators.PropertyGenerator.class,
-    property = "id",
-    scope = User.class)
-@Table(name = "users")
-@UniqueUserEmail
-public class User extends AbstractEntity {
+@PasswordAndAPasswordRepeatMatch
+public class UserDto {
   @NotBlank protected String firstName;
   @NotBlank protected String lastName;
   @NotBlank protected String street;
@@ -22,27 +18,21 @@ public class User extends AbstractEntity {
   @NotBlank protected String birthday;
   @NotBlank @Email protected String email;
 
-  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-  @NotBlank
-  protected String password;
+  // @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+  @NotBlank protected String password;
+
+  // @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+  @NotBlank protected String passwordRepeat;
 
   @NotNull @AssertTrue protected boolean privacyStatement;
 
-  @ManyToMany
-  @JoinTable(
-      name = "users_roles",
-      joinColumns = @JoinColumn(name = "users_id"),
-      inverseJoinColumns = @JoinColumn(name = "role_id"))
   protected List<Role> roles;
-
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-  protected List<Order> orders;
 
   @NotNull protected boolean hasVerifiedAge;
 
-  public User() {}
+  public UserDto() {}
 
-  public User(
+  public UserDto(
       String firstName,
       String lastName,
       String street,
@@ -51,6 +41,7 @@ public class User extends AbstractEntity {
       String birthday,
       String email,
       String password,
+      String passwordRepeat,
       boolean privacyStatement,
       boolean hasVerifiedAge) {
     this.firstName = firstName;
@@ -61,6 +52,7 @@ public class User extends AbstractEntity {
     this.birthday = birthday;
     this.email = email;
     this.password = password;
+    this.passwordRepeat = passwordRepeat;
     this.privacyStatement = privacyStatement;
     this.hasVerifiedAge = hasVerifiedAge;
   }
@@ -129,6 +121,14 @@ public class User extends AbstractEntity {
     this.password = password;
   }
 
+  public String getPasswordRepeat() {
+    return passwordRepeat;
+  }
+
+  public void setPasswordRepeat(String passwordRepeat) {
+    this.passwordRepeat = passwordRepeat;
+  }
+
   public boolean isPrivacyStatement() {
     return privacyStatement;
   }
@@ -143,14 +143,6 @@ public class User extends AbstractEntity {
 
   public void setRoles(List<Role> roles) {
     this.roles = roles;
-  }
-
-  public List<Order> getOrders() {
-    return orders;
-  }
-
-  public void setOrders(List<Order> orders) {
-    this.orders = orders;
   }
 
   public boolean isHasVerifiedAge() {

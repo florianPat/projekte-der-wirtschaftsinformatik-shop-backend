@@ -50,12 +50,13 @@ public class OrderController {
     UserDetail userDetail = (UserDetail) userPrinciple;
 
     Order order = orderMapper.mapFrom(Arrays.asList(orderItemDtoList));
-    User user = userRepository.findByEmail(userDetail.getEmail()).orElseThrow();
+    User user = userRepository.findByEmailIgnoreCase(userDetail.getEmail()).orElseThrow();
     order.setUser(user);
+    Order result = orderRepository.save(order);
 
     String orderEmailDetails = "";
     float price = 0.0f;
-    for (OrderItem orderItem : order.getOrderItemList()) {
+    for (OrderItem orderItem : result.getOrderItemList()) {
       orderEmailDetails +=
           "- "
               + orderItem.getProductVariant().getProduct().getName()
@@ -85,10 +86,7 @@ public class OrderController {
             + orderEmailDetails
             + "\n\nIhr sip.shop!");
 
-    orderRepository.save(order);
-
-    return new ResponseEntity<>(
-        new ApiResponse(true, "Order saved successfully"), HttpStatus.CREATED);
+    return new ResponseEntity<>(result, HttpStatus.CREATED);
   }
 
   @GetMapping("/orders")
@@ -112,7 +110,7 @@ public class OrderController {
     }
     UserDetail userDetail = (UserDetail) userPrinciple;
 
-    User user = userRepository.findByEmail(userDetail.getEmail()).orElseThrow();
+    User user = userRepository.findByEmailIgnoreCase(userDetail.getEmail()).orElseThrow();
 
     return orderRepository.findByUserId(user.getId());
   }
@@ -123,14 +121,13 @@ public class OrderController {
       @PathVariable int id, @Valid @RequestBody PatchOrderStatusDto patchOrderStatusDto) {
     Optional<Order> orderOptional = orderRepository.findById(id);
     if (orderOptional.isEmpty()) {
-      return new ResponseEntity<>(new ApiResponse(false, "Order not found"), HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(new ApiResponse("Order not found"), HttpStatus.NOT_FOUND);
     }
 
     Order order = orderOptional.get();
     order.setStatus(patchOrderStatusDto.getStatus());
-    orderRepository.save(order);
+    Order result = orderRepository.save(order);
 
-    return new ResponseEntity<>(
-        new ApiResponse(true, "Order status changed successfully"), HttpStatus.OK);
+    return new ResponseEntity<>(result, HttpStatus.OK);
   }
 }
