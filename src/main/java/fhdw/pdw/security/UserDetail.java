@@ -1,6 +1,5 @@
 package fhdw.pdw.security;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import fhdw.pdw.model.User;
 import java.util.Collection;
 import java.util.List;
@@ -13,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class UserDetail implements UserDetails {
   protected int id;
   protected String email;
-  @JsonIgnore protected String password;
+  protected String password;
   protected Collection<? extends GrantedAuthority> authorities;
   protected static final long serialVersionUID = 42L;
 
@@ -58,25 +57,21 @@ public class UserDetail implements UserDetails {
   }
 
   @Override
-  @JsonIgnore
   public boolean isAccountNonExpired() {
     return true;
   }
 
   @Override
-  @JsonIgnore
   public boolean isAccountNonLocked() {
     return true;
   }
 
   @Override
-  @JsonIgnore
   public boolean isCredentialsNonExpired() {
     return true;
   }
 
   @Override
-  @JsonIgnore
   public boolean isEnabled() {
     return true;
   }
