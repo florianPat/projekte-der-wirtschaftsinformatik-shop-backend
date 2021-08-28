@@ -53,6 +53,7 @@ test {
 
 bootRun {
 	systemProperties = System.properties
+	jvmArgs = (null != System.getenv("LANDO") && !"generatesql".equals(System.getProperty("spring.profiles.active"))) ? ["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"] : []
 }
 
 flyway {

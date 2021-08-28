@@ -1,25 +1,30 @@
 package fhdw.pdw.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.List;
 import javax.persistence.*;
 
 @Entity
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id",
+    scope = ProductVariant.class)
 public class ProductVariant extends AbstractEntity {
   protected int stock;
   protected float price;
 
   @ManyToOne
   @JoinColumn(name = "product_id")
-  @JsonIgnore
   protected Product product;
 
   @ManyToOne
   @JoinColumn(name = "unit_id")
   protected Unit unit;
 
-  @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL)
   @JsonIgnore
+  @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL)
   protected List<OrderItem> orderItemList;
 
   public ProductVariant() {}

@@ -12,23 +12,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class UserDetail implements UserDetails {
   protected int id;
-  protected String name;
-  protected String username;
   protected String email;
   @JsonIgnore protected String password;
-  @JsonIgnore protected Collection<? extends GrantedAuthority> authorities;
+  protected Collection<? extends GrantedAuthority> authorities;
   protected static final long serialVersionUID = 42L;
 
   public UserDetail(
-      int id,
-      String name,
-      String username,
-      String email,
-      String password,
-      Collection<? extends GrantedAuthority> authorities) {
+      int id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
     this.id = id;
-    this.name = name;
-    this.username = username;
     this.email = email;
     this.password = password;
     this.authorities = authorities;
@@ -40,21 +31,11 @@ public class UserDetail implements UserDetails {
             .map(role -> new SimpleGrantedAuthority(role.getName().name()))
             .collect(Collectors.toList());
 
-    return new UserDetail(
-        user.getId(),
-        user.getFirstName() + user.getLastName(),
-        user.getEmail(),
-        user.getEmail(),
-        user.getPassword(),
-        authorities);
+    return new UserDetail(user.getId(), user.getEmail(), user.getPassword(), authorities);
   }
 
   public int getId() {
     return id;
-  }
-
-  public String getName() {
-    return name;
   }
 
   public String getEmail() {
@@ -73,7 +54,7 @@ public class UserDetail implements UserDetails {
 
   @Override
   public String getUsername() {
-    return username;
+    return email;
   }
 
   @Override

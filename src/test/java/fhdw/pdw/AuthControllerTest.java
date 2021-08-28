@@ -5,9 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.junit.jupiter.api.Assertions.*;
 
 import fhdw.pdw.model.User;
-import fhdw.pdw.model.dto.ApiResponse;
-import fhdw.pdw.model.dto.JwtAuthenticationResponse;
-import fhdw.pdw.model.dto.LoginUser;
+import fhdw.pdw.model.dto.*;
 import fhdw.pdw.repository.UserRepository;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -26,11 +24,10 @@ public class AuthControllerTest extends AbstractHttpRequestTest {
 
   @Test
   public void registrationShouldSucceed() {
-    User user = createUser();
+    UserDto user = createUser();
 
     ResponseEntity<ApiResponse> response = postRegisterRequestWith(user);
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
-    assertThat(response.getBody()).hasFieldOrPropertyWithValue("success", true);
 
     MimeMessage receivedMessage = greenMail.getReceivedMessages()[0];
     assertThatNoException()
@@ -40,28 +37,28 @@ public class AuthControllerTest extends AbstractHttpRequestTest {
               assertEquals("siphydrated@gmail.com", receivedMessage.getFrom()[0].toString());
             });
 
-    assertNotNull(userRepository.findByEmail(user.getEmail()));
+    assertNotNull(userRepository.findByEmailIgnoreCase(user.getEmail()));
   }
 
   @Test
   public void registrationShouldNotSucceedWithSameEmail() {
-    User user = createUser();
+    UserDto user = createUser();
 
     ResponseEntity<ApiResponse> response = postRegisterRequestWith(user);
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
-    response = postRegisterRequestWith(user);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    assertThat(response.getBody()).hasFieldOrPropertyWithValue("success", false);
+    ResponseEntity<ErrorResponse[]> errorResponse =
+        postRegisterRequestWith(user, ErrorResponse[].class);
+    assertEquals(HttpStatus.BAD_REQUEST, errorResponse.getStatusCode());
   }
 
-  static Stream<User> getInvalidUsers() {
-    User user1 = createUser();
+  static Stream<UserDto> getInvalidUsers() {
+    UserDto user1 = createUser();
     user1.setEmail("IchBinKeineEmail");
-    User user2 = createUser();
+    UserDto user2 = createUser();
     user2.setPasswordRepeat("IchBinNichtDasGleichePassword");
-    User user3 = createUser();
+    UserDto user3 = createUser();
     user3.setPrivacyStatement(false);
-    User user4 = createUser();
+    UserDto user4 = createUser();
     user4.setCity("");
 
     return Stream.of(user1, user2, user3, user4);
@@ -69,7 +66,7 @@ public class AuthControllerTest extends AbstractHttpRequestTest {
 
   @ParameterizedTest
   @MethodSource("fhdw.pdw.AuthControllerTest#getInvalidUsers")
-  public void invalidUserCanNotRegister(User user) {
+  public void invalidUserCanNotRegister(UserDto user) {
     ResponseEntity<ApiResponse> response = postRegisterRequestWith(user);
     assertTrue(
         HttpStatus.BAD_REQUEST == response.getStatusCode()
@@ -78,7 +75,7 @@ public class AuthControllerTest extends AbstractHttpRequestTest {
 
   @Test
   public void loginShouldSucceedWithValidCredentials() {
-    User user = createUser();
+    UserDto user = createUser();
 
     ResponseEntity<ApiResponse> registerResponse = postRegisterRequestWith(user);
     assertEquals(HttpStatus.CREATED, registerResponse.getStatusCode());
@@ -96,14 +93,14 @@ public class AuthControllerTest extends AbstractHttpRequestTest {
     User userResponseBody = userResponse.getBody();
     assertNotNull(userResponseBody);
     assertEquals(user.getEmail(), userResponseBody.getEmail());
-    Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
+    Optional<User> userOptional = userRepository.findByEmailIgnoreCase(user.getEmail());
     assertTrue(userOptional.isPresent());
     assertEquals(userOptional.get().getId(), userResponseBody.getId());
   }
 
   @Test
   public void logoutShouldSucceed() {
-    User user = createUser();
+    UserDto user = createUser();
 
     ResponseEntity<ApiResponse> registerResponse = postRegisterRequestWith(user);
     assertEquals(HttpStatus.CREATED, registerResponse.getStatusCode());
@@ -135,7 +132,7 @@ public class AuthControllerTest extends AbstractHttpRequestTest {
 
   @Test
   public void loginShouldNotSucceedWithNotExistingUser() {
-    User user = createUser();
+    UserDto user = createUser();
     ResponseEntity<JwtAuthenticationResponse> response =
         postLoginRequestWith(new LoginUser(user.getEmail(), user.getPassword()));
     assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
@@ -143,19 +140,18 @@ public class AuthControllerTest extends AbstractHttpRequestTest {
 
   @Test
   public void loginShouldNotSucceedWithInvalidPassword() {
-    User user = createUser();
+    UserDto user = createUser();
 
     ResponseEntity<ApiResponse> registerResponse = postRegisterRequestWith(user);
     assertEquals(HttpStatus.CREATED, registerResponse.getStatusCode());
-    assertThat(registerResponse.getBody()).hasFieldOrPropertyWithValue("success", true);
 
     ResponseEntity<JwtAuthenticationResponse> loginResponse =
         postLoginRequestWith(new LoginUser(user.getEmail(), "Not-the-password"));
     assertEquals(HttpStatus.UNAUTHORIZED, loginResponse.getStatusCode());
   }
 
-  protected static User createUser() {
-    User user = new User();
+  protected static UserDto createUser() {
+    UserDto user = new UserDto();
     user.setFirstName("Flo");
     user.setLastName("Pat");
     user.setStreet("West");
@@ -170,8 +166,12 @@ public class AuthControllerTest extends AbstractHttpRequestTest {
     return user;
   }
 
-  protected ResponseEntity<ApiResponse> postRegisterRequestWith(User user) {
-    return post("/api/auth/register", user, ApiResponse.class);
+  protected ResponseEntity<ApiResponse> postRegisterRequestWith(UserDto user) {
+    return postRegisterRequestWith(user, ApiResponse.class);
+  }
+
+  protected <T> ResponseEntity<T> postRegisterRequestWith(UserDto user, Class<T> responseClass) {
+    return post("/api/auth/register", user, responseClass);
   }
 
   protected ResponseEntity<JwtAuthenticationResponse> postLoginRequestWith(LoginUser loginUser) {

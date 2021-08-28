@@ -15,6 +15,11 @@ Backend for the shop application developed for the university module "Projekte d
 ## Mailhog email catcher
 - Visit [Mailhog](http://pdw-shop-mailhog.lndo.site/)
 
+## Intellij remote jvm debugging configuration
+- Host: pdw-shop-backend.lndo.site
+- Port: 5005
+- Command line argument for remote jvm: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+
 ## Tooling
 - `lando compile`: Build project and hot reload code
 - `lando test`: Run tests with the h2 in-memory database
@@ -25,4 +30,4 @@ Backend for the shop application developed for the university module "Projekte d
 - `lando spotbugs`: Run static code analysis
 - `lando spotless`: Run code format fixer
 - `lando hibernateSchema`: Create hibernate schema file for migration creation
-- `lando flywayMigrate`: Migrate database with the latest migrations
+- Flyway migrations run automatically on each server startup (see `lando logs -s appserver -f`)

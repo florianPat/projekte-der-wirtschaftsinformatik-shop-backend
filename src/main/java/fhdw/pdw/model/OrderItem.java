@@ -1,15 +1,19 @@
 package fhdw.pdw.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id",
+    scope = OrderItem.class)
 public class OrderItem extends AbstractEntity {
   @ManyToOne
   @JoinColumn(name = "order_id")
-  @JsonIgnore
   protected Order order;
 
   @ManyToOne

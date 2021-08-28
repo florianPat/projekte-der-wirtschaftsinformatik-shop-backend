@@ -1,21 +1,22 @@
 package fhdw.pdw.controller;
 
+import fhdw.pdw.mapper.ConstraintViolationSetToErrorResponseMapper;
+import fhdw.pdw.mapper.UserMapper;
 import fhdw.pdw.model.User;
-import fhdw.pdw.model.dto.ApiResponse;
+import fhdw.pdw.model.dto.UserDto;
 import fhdw.pdw.repository.UserRepository;
 import fhdw.pdw.security.UserDetail;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api")
 @RestController
@@ -23,30 +24,43 @@ public class UserController {
   protected UserRepository userRepository;
   protected Validator validator;
   protected PasswordEncoder passwordEncoder;
+  protected UserMapper userMapper;
+  protected ConstraintViolationSetToErrorResponseMapper constraintViolationSetToErrorResponseMapper;
 
   public UserController(
-      UserRepository userRepository, Validator validator, PasswordEncoder passwordEncoder) {
+      UserRepository userRepository,
+      Validator validator,
+      PasswordEncoder passwordEncoder,
+      UserMapper userMapper,
+      ConstraintViolationSetToErrorResponseMapper constraintViolationSetToErrorResponseMapper) {
     this.userRepository = userRepository;
     this.validator = validator;
     this.passwordEncoder = passwordEncoder;
+    this.userMapper = userMapper;
+    this.constraintViolationSetToErrorResponseMapper = constraintViolationSetToErrorResponseMapper;
   }
 
-  // TODO: Add error reporting
-  @PutMapping("/user")
+  @PatchMapping("/users")
   @Secured("ROLE_USER")
-  public ResponseEntity<?> putUser(@RequestBody User putUser) {
+  public ResponseEntity<?> patchUser(@RequestBody UserDto patchUser) {
     Object userPrinciple = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     if (!(userPrinciple instanceof UserDetail)) {
       throw new RuntimeException("The logged in user needs to be of type UserDetail!");
     }
     UserDetail userDetail = (UserDetail) userPrinciple;
 
-    User user = userRepository.findByEmail(userDetail.getEmail()).orElseThrow();
+    User user = userRepository.findByEmailIgnoreCase(userDetail.getEmail()).orElseThrow();
+    User patchMappedUser = userMapper.mapFrom(patchUser);
 
-    boolean shouldReauthenticate = false;
+    Set<ConstraintViolation<UserDto>> violations = validator.validate(patchUser);
+    for (ConstraintViolation<?> constraintViolation : violations) {
+      String path = constraintViolation.getPropertyPath().toString();
+      int x = 0;
+    }
 
-    for (Field field : putUser.getClass().getDeclaredFields()) {
-      if (validator.validateProperty(putUser, field.getName()).isEmpty()) {
+    // TODO: Fix primitive types!
+    for (Field field : patchMappedUser.getClass().getDeclaredFields()) {
+      if (validator.validateProperty(patchMappedUser, field.getName()).isEmpty()) {
         try {
           String getterMethodPrefix = "get";
           if (field.getType().equals(Boolean.TYPE)) {
@@ -54,27 +68,20 @@ public class UserController {
           }
 
           Object propertyValue =
-              putUser
+              patchMappedUser
                   .getClass()
                   .getDeclaredMethod(
                       getterMethodPrefix
                           + field.getName().substring(0, 1).toUpperCase()
                           + field.getName().substring(1))
-                  .invoke(putUser);
+                  .invoke(patchMappedUser);
 
-          if (field.getName().equals("email")) {
-            String putUserEmail = putUser.getEmail();
-            if (userRepository.existsByEmail(putUserEmail)
-                || user.getEmail().equals(putUserEmail)) {
-              continue;
-            }
+          if (propertyValue == null) {
+            continue;
           }
+
           if (field.getName().equals("password")) {
-            if (!putUser.getPassword().equals(putUser.getPasswordRepeat())) {
-              continue;
-            }
             propertyValue = passwordEncoder.encode((CharSequence) propertyValue);
-            shouldReauthenticate = true;
           }
 
           user.getClass()
@@ -86,21 +93,18 @@ public class UserController {
               .invoke(user, propertyValue);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
           e.printStackTrace();
-          return new ResponseEntity<>(new ApiResponse(false, ""), HttpStatus.INTERNAL_SERVER_ERROR);
+          return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
       }
     }
 
-    user.setPasswordRepeat("this_is_the_repeated_password");
+    Set<ConstraintViolation<User>> violationsUser = validator.validate(user);
+    if (!violationsUser.isEmpty()) {
+      return constraintViolationSetToErrorResponseMapper.mapFrom(violationsUser);
+    }
 
     userRepository.save(user);
 
-    if (shouldReauthenticate) {
-      return new ResponseEntity<>(
-          new ApiResponse(true, "User updated successfully and should authenticate again"),
-          HttpStatus.OK);
-    }
-
-    return new ResponseEntity<>(new ApiResponse(true, "User updated successfully"), HttpStatus.OK);
+    return new ResponseEntity<>(user, HttpStatus.OK);
   }
 }

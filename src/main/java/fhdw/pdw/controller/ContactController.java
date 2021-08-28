@@ -33,6 +33,6 @@ public class ContactController {
             + "\n"
             + contactFormMessage.getText());
 
-    return new ResponseEntity<>(new ApiResponse(true, "Message send successfully"), HttpStatus.OK);
+    return new ResponseEntity<>(new ApiResponse("Message send successfully"), HttpStatus.OK);
   }
 }
