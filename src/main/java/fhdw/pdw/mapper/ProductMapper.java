@@ -10,6 +10,7 @@ import fhdw.pdw.repository.ProductRepository;
 import fhdw.pdw.repository.ProductVariantRepository;
 import fhdw.pdw.repository.UnitRepository;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +32,16 @@ public class ProductMapper {
     this.productVariantRepository = productVariantRepository;
   }
 
+  protected String getNormalizedHash(ProductDto productDto) {
+    return productDto.getName()
+        + productDto.getMinAge()
+        + productDto.getProducer()
+        + productDto.getAllergens()
+        + productDto.getCategory();
+  }
+
   public List<Product> mapFrom(List<ProductDto> dtos) {
-    List<Product> result = new ArrayList<>();
+    HashMap<String, Product> normalizedResultMap = new HashMap<>();
 
     for (ProductDto dto : dtos) {
       Product product = new Product(dto.getName(), dto.getCover(), dto.getMinAge());
@@ -51,10 +60,15 @@ public class ProductMapper {
 
       product.setVariants(variants);
 
-      result.add(product);
+      if (normalizedResultMap.containsKey(getNormalizedHash(dto))) {
+        Product alreadyMappedProduct = normalizedResultMap.get(getNormalizedHash(dto));
+        alreadyMappedProduct.getVariants().addAll(product.getVariants());
+      } else {
+        normalizedResultMap.put(getNormalizedHash(dto), product);
+      }
     }
 
-    return result;
+    return new ArrayList<>(normalizedResultMap.values());
   }
 
   public void mapAndReplaceFrom(List<ProductDto> dtos) {
@@ -71,8 +85,12 @@ public class ProductMapper {
         product.setCategory(category);
       }
 
-      List<ProductVariant> variants = new ArrayList<>();
-      for (ProductVariant variant : product.getVariants()) {
+      List<ProductVariant> productVariants = product.getVariants();
+      product.setVariants(null);
+      Product persistedProduct = productRepository.save(product);
+
+      for (ProductVariant variant : productVariants) {
+        variant.setProduct(persistedProduct);
         if (0 == variant.getUnit().getId()) {
           Unit unit =
               unitRepository.findByTitleAndAmountAndNumberOfContainer(
@@ -84,11 +102,8 @@ public class ProductMapper {
           }
           variant.setUnit(unit);
         }
-        variants.add(variant);
+        productVariantRepository.save(variant);
       }
-      product.setVariants(variants);
-
-      productRepository.save(product);
     }
   }
 
