@@ -40,8 +40,6 @@ public class User extends AbstractEntity {
 
   @NotNull protected boolean hasVerifiedAge;
 
-  protected String sessionId;
-
   public User() {}
 
   public User(
@@ -161,13 +159,5 @@ public class User extends AbstractEntity {
 
   public void setHasVerifiedAge(boolean hasVerifiedAge) {
     this.hasVerifiedAge = hasVerifiedAge;
-  }
-
-  public String getSessionId() {
-    return sessionId;
-  }
-
-  public void setSessionId(String sessionId) {
-    this.sessionId = sessionId;
   }
 }
