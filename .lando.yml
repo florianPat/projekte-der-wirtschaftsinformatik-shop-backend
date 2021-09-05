@@ -27,6 +27,7 @@ services:
         - "587" # for gmail mail sending
       environment:
         LANDO_DROP_USER: www-data
+        STRIPE_API_KEY: "THE_API_KEY"
   mailhog:
     type: mailhog
     hogfrom:

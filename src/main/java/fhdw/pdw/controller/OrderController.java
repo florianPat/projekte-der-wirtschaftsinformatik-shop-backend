@@ -1,5 +1,9 @@
 package fhdw.pdw.controller;
 
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
 import fhdw.pdw.email.EmailService;
 import fhdw.pdw.mapper.OrderMapper;
 import fhdw.pdw.model.Order;
@@ -14,6 +18,7 @@ import fhdw.pdw.security.UserDetail;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +43,36 @@ public class OrderController {
     this.emailService = emailService;
     this.orderMapper = orderMapper;
     this.userRepository = userRepository;
+  }
+
+  protected static void setStripeApiKey() {
+    Stripe.apiKey = System.getenv("STRIPE_API_KEY");
+  }
+
+  @PostMapping("/order/pay")
+  @Secured("ROLE_USER")
+  public ResponseEntity<?> payOrder(
+      HttpServletRequest request, @Valid @RequestBody OrderItemDto[] orderItemDtoList) {
+    Order order = orderMapper.mapFrom(Arrays.asList(orderItemDtoList));
+    setStripeApiKey();
+
+    long amount = 0;
+    for (OrderItem orderItem : order.getOrderItemList()) {
+      amount += (long) orderItem.getProductVariant().getPrice() * 100.0f;
+    }
+
+    PaymentIntentCreateParams params =
+        new PaymentIntentCreateParams.Builder().setAmount(amount).setCurrency("eur").build();
+
+    PaymentIntent paymentIntent;
+    try {
+      paymentIntent = PaymentIntent.create(params);
+    } catch (StripeException e) {
+      e.printStackTrace();
+      return new ResponseEntity<>(new ApiResponse(e.getUserMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    return new ResponseEntity<>(new ApiResponse(paymentIntent.getClientSecret()), HttpStatus.OK);
   }
 
   @PostMapping("/order")
