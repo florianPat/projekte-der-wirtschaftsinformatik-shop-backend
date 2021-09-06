@@ -16,6 +16,10 @@ public class UniqueUserEmailValidator implements ConstraintValidator<UniqueUserE
       SpringUtility.getBean(EntityManagerFactory.class);
   protected UserRepository userRepository;
 
+  public void setUserRepository(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
+
   @Override
   public void initialize(UniqueUserEmail constraintAnnotation) {
     ConstraintValidator.super.initialize(constraintAnnotation);
