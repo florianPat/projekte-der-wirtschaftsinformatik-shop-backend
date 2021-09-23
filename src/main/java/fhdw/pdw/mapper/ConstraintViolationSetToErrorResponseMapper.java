@@ -11,6 +11,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ConstraintViolationSetToErrorResponseMapper {
+  /**
+   * Wenn Validationsfehler auf einem Objekt auftreten, wandelt diese Methode die Fehler in eine
+   * generische Antwort, welche für jede Fehlerart benutzt wird, um, indem die Fehlermeldungen
+   * in die Antwort geschrieben werden
+   */
   public <T> ResponseEntity<?> mapFrom(Set<ConstraintViolation<T>> constraintViolations) {
     List<ErrorResponse> result = new ArrayList<>();
     for (ConstraintViolation<?> violation : constraintViolations) {

@@ -14,6 +14,9 @@ public class ProductController {
     this.productRepository = productRepository;
   }
 
+  /**
+   * API-Endpunkt, um alle Produkte zu erhalten. Des Weiteren kann nach Kategorien gefiltert werden
+   */
   @GetMapping("/products")
   public List<Product> getProducts(
       @RequestParam(value = "category", required = false) Integer category,
@@ -29,6 +32,9 @@ public class ProductController {
     return this.productRepository.findAll();
   }
 
+  /**
+   * API-Endpunkt, um ein bestimmtes Produkt zu erhalten
+   */
   @GetMapping("/products/{id}")
   public Product getProduct(@PathVariable int id) {
     Optional<Product> result = this.productRepository.findById(id);

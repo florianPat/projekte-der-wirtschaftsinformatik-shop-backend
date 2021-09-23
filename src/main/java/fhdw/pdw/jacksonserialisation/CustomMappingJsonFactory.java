@@ -12,6 +12,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * Die MappingsJsonFactory wird überschrieben, um einen eigens erstellten UTF8JsonGenerator
+ * zu erzeugen und um dadruch im CollectionSerializer die wiederholte Serialisierung bei einem
+ * neuen Array Eintrag zu erzwingen
+ */
 public class CustomMappingJsonFactory extends MappingJsonFactory {
   private static final long serialVersionUID = -1; // since 2.7
 

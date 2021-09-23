@@ -15,6 +15,12 @@ public class SpringUtility implements ApplicationContextAware {
     SpringUtility.setContext(applicationContext);
   }
 
+  /**
+   * Diese Methode kann von Java Migrationen oder in Validatoren genutzt werden, um Spring Beans
+   * aus dem Container zu bekommen
+   * @param clazz<T> das Bean, welches durch den Container konstruiert werden soll
+   * @return das konstruierte Spring Bean
+   */
   public static <T> T getBean(final Class<T> clazz) {
     return SpringUtility.applicationContext.getBean(clazz);
   }

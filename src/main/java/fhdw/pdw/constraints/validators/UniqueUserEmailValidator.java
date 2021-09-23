@@ -11,6 +11,10 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 
+/**
+ * Validator um sicherzustellen, dass eine E-Mail-Adresse nur einmal im System hinterlegt ist,
+ * da sie einen Teil der Authentifiaktionsdaten eines Benutzers darstellt
+ */
 public class UniqueUserEmailValidator implements ConstraintValidator<UniqueUserEmail, User> {
   protected EntityManagerFactory entityManagerFactory =
       SpringUtility.getBean(EntityManagerFactory.class);

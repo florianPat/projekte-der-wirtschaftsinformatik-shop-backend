@@ -21,6 +21,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   protected static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
+  /**
+   * Diese Methode liest den JWT Token aus dem Header der Anfrage und authentifiziert den
+   * dazugehörigen Benutzer in der Spring Applikation, sodass das Rollensystem gerift und
+   * funktioniert
+   */
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

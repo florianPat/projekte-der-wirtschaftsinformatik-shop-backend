@@ -17,11 +17,17 @@ public class CategoryController {
     this.categoryRepository = categpryRepository;
   }
 
+  /**
+   * API-Abfrage, um alle Kategorien zu erhalten
+   */
   @GetMapping("/categories")
   public List<Category> getCategories() {
     return this.categoryRepository.findAll();
   }
 
+  /**
+   * API-Abfrage, um eine bestimmte Kategorie zu erhalten
+   */
   @GetMapping("categories/{id}")
   public Category getCategory(@PathVariable int id) {
     return this.categoryRepository.findById(id).get();

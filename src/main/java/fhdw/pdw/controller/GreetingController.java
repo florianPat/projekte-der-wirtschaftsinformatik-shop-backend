@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GreetingController {
 
+  /**
+   * Test-API-Endpunkt
+   * @return
+   */
   @GetMapping("/greeting")
   public String greeting() {
     return "Hello World";

@@ -18,6 +18,9 @@ public class JwtTokenProvider {
   @Value("${app.jwtExpirationInMs}")
   protected int jwtExpirationInMs;
 
+  /**
+   * Generiert den Token bei einem Login mit Hilfe der JWT Bibiliothek
+   */
   public String generateToken(Authentication authentication) {
     UserDetail userDetail = (UserDetail) authentication.getPrincipal();
     Date now = new Date();
@@ -30,11 +33,17 @@ public class JwtTokenProvider {
         .compact();
   }
 
+  /**
+   * Extrahiert die Benutzer ID Spalte für eine Datenbankabfrage aus dem JWT Token
+   */
   public Integer getUserIdFromJWT(String token) {
     Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
     return Integer.parseInt(claims.getSubject());
   }
 
+  /**
+   * Validierung des JWT Tokens auf Gültigkeit hinsichtlich Zeitraum und Benutzer Identifikation
+   */
   public boolean validateToken(String authToken) {
     try {
       Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);

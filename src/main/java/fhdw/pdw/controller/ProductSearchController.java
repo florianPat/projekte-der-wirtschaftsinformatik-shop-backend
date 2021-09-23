@@ -17,6 +17,10 @@ public class ProductSearchController {
     this.productRepository = productRepository;
   }
 
+  /**
+   * API-Endpunkt um die Suche im Shop zu implementieren. Alle gefundenen Produkte, welche den
+   * Herstell, die Kategorie oder den Produktnamen enthalten, werden zurückgegeben
+   */
   @GetMapping("/productSearch")
   public List<Product> findProducts(@RequestParam(value = "searchTerm") String searchTerm) {
     int searchId = 0;

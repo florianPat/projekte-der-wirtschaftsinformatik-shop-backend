@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.DefaultSerializerProvider;
 import com.fasterxml.jackson.databind.ser.SerializerFactory;
 
+/**
+ * Diese Klasse wird im CustomCollectionSerializer benutzt, um das erneute Serialisieren eines
+ * Objektes zu erzwingen, da sonst nur die ID serialisert werden würde
+ */
 public class CustomSerializerProvider extends DefaultSerializerProvider {
   public CustomSerializerProvider() {
     super();
@@ -35,6 +39,9 @@ public class CustomSerializerProvider extends DefaultSerializerProvider {
     return new CustomSerializerProvider(this, config, jsf);
   }
 
+  /**
+   * Zurücksetzten der gesehenen Objekte, sodass diese wieder neu serialisert werden
+   */
   public void resetMemoryCircularReference() {
     if (_seenObjectIds != null) {
       _seenObjectIds.clear();

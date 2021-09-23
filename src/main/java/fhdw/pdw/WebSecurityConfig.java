@@ -27,6 +27,9 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
     jsr250Enabled = true, // Enables @RolesAllowed("ROLE_ADMIN") annotation
     prePostEnabled = true // Enables @PreAuthorize("isAnonymous()") / "hasRole('USER')" annotation
     )
+/**
+ * Diese Klase konfiguriert das JWT Verfahren als Authentifizierungsmethode in das Spring Boot Framework
+ */
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired protected CustomUserDetailsService customUserDetailService;
 
@@ -39,6 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     return new JwtAuthenticationFilter();
   }
 
+  /** Bestimmung des Password Hash Algorithmus */
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
@@ -62,6 +66,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     return super.authenticationManagerBean();
   }
 
+  /**
+   * Diese Methode setzt den forwarded-proto Header um die HTTPS Domains zu ermöglichen.
+   * Au0erdem wird csrf bei Anfragen deaktiviert, da einfach JSON Anfragen an den Server geschickt werden
+   * Des Weiteren wird ein Fehlerhandler definiert und die Session wird ausgeschaltet um das CSV Formular
+   * richtig funktionieren zu lassen. Außerdem wird die Logout URL definiert
+   */
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.requiresChannel()

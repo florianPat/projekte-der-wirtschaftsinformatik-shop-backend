@@ -14,6 +14,10 @@ import org.springframework.context.annotation.*;
 @EnableConfigurationProperties(FlywayProperties.class)
 @ConditionalOnProperty(prefix = "spring.flyway", name = "enabled", matchIfMissing = true)
 public class FlywaySpringIntegration extends FlywayConfiguration {
+  /**
+   * Um den Spring Container in Flyway Java Migrationen zu verwenden, wird vor dem Starten von
+   * Flyway das Bean SpringUtility initialisert
+   */
   @Primary
   @Bean(name = "flywayInitializer")
   @DependsOn("springUtility")

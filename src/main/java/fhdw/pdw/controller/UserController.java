@@ -40,6 +40,11 @@ public class UserController {
     this.constraintViolationSetToErrorResponseMapper = constraintViolationSetToErrorResponseMapper;
   }
 
+  /**
+   * Patch-Endpunkt, um Daten des Benutzers, wie das Passwort oder die Adresse oder die E-Mail
+   * Adresse zu verändern. Außerdem findet eine Überprüfung auf eine bereits verwendete E-Mail
+   * sowie eine Passwort Validierung statt
+   */
   @PatchMapping("/users")
   @Secured("ROLE_USER")
   public ResponseEntity<?> patchUser(@RequestBody UserDto patchUser) {

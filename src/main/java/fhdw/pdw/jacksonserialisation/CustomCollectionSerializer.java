@@ -14,6 +14,10 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
+/**
+ * Um bei Arrays nicht nur das erste Element zu serialisieren, sondnern alle Objekte in einem
+ * neuen Eintrag isoliert voneinander zu behandeln, wurde der CollectionSerializer überschrieben
+ */
 public class CustomCollectionSerializer extends CollectionSerializer {
   private static final long serialVersionUID = 1L;
 

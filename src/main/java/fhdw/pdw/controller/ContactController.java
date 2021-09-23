@@ -20,6 +20,10 @@ public class ContactController {
     this.emailService = emailService;
   }
 
+  /**
+   * API-Abfrage, um das Kontaktformular abzuschicken und eine E-Mail an die Geschäftsemailaddresse
+   * zu verschicken
+   */
   @PostMapping("/contact")
   public ResponseEntity<?> postContactForm(
       @Valid @RequestBody ContactFormMessage contactFormMessage) {

@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserMapper {
+  /**
+   * Hier werden die Daten des Registierungsformulars in eine Benutzer Entität, welche in der
+   * Datenbank persisiert werden kann, überführt
+   */
   public User mapFrom(UserDto userDto) {
     User result =
         new User(

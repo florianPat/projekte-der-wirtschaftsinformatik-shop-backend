@@ -9,6 +9,9 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 public class CorsFilterConfiguration {
+  /**
+   * CORS Konfiguration, damit das Frontend die API des Backend aufrufen darf
+   */
   @Bean
   public CorsFilter corsFilter() {
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

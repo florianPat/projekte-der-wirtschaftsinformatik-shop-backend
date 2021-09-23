@@ -6,6 +6,10 @@ import com.fasterxml.jackson.core.json.JsonWriteContext;
 import com.fasterxml.jackson.core.json.UTF8JsonGenerator;
 import java.io.OutputStream;
 
+/**
+ * Diese Klasse wird im CollectionSerializer genutzt, um auf den WriteContext (einer
+ * sonst privaten Variable) zuzugreifen und die gesehenen Objekte zurückzusetzten
+ */
 public class CustomUTF8JsonGenerator extends UTF8JsonGenerator {
   public CustomUTF8JsonGenerator(
       IOContext ctxt, int features, ObjectCodec codec, OutputStream out, char quoteChar) {

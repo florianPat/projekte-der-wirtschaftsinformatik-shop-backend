@@ -5,6 +5,9 @@ import fhdw.pdw.model.dto.UserDto;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+/**
+ * Validator zu Prüfung, dass die Fehler "Passwort" und "Passwort wiederholen" übereinstimmen
+ */
 public class PasswordAndAPasswordRepeatMatchValidator
     implements ConstraintValidator<PasswordAndAPasswordRepeatMatch, UserDto> {
   @Override

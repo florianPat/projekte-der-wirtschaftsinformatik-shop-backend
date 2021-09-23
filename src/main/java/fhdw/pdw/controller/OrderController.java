@@ -49,6 +49,9 @@ public class OrderController {
     Stripe.apiKey = System.getenv("STRIPE_API_KEY");
   }
 
+  /**
+   * API-Endpunkt, um eine Stripe Zahlung zu initialisieren
+   */
   @PostMapping("/order/pay")
   @Secured("ROLE_USER")
   public ResponseEntity<?> payOrder(
@@ -75,6 +78,9 @@ public class OrderController {
     return new ResponseEntity<>(new ApiResponse(paymentIntent.getClientSecret()), HttpStatus.OK);
   }
 
+  /**
+   * API-Endpunkt, um eine Bestellung aufzugeben. Nur mit der Rolle "USER" berechtigt
+   */
   @PostMapping("/order")
   @Secured("ROLE_USER")
   public ResponseEntity<?> createOrder(@Valid @RequestBody OrderItemDto[] orderItemDtoList) {
@@ -124,18 +130,29 @@ public class OrderController {
     return new ResponseEntity<>(result, HttpStatus.CREATED);
   }
 
+  /**
+   * API-Endpunkt zum erhalten aller Bestellungen für den Admin
+   * @return
+   */
   @GetMapping("/orders")
   @Secured("ROLE_ADMIN")
   public List<Order> getOrders() {
     return orderRepository.findAll();
   }
 
+  /**
+   * API-Endpunkt, um Informationen zu einer bestimmten Bestellung zu erhalten. Nur der Admin ist
+   * berechtigt, diese Abfrage auszuführen
+   */
   @GetMapping("/orders/{id}")
   @Secured("ROLE_ADMIN")
   public Order getOrder(@PathVariable int id) {
     return orderRepository.findById(id).get();
   }
 
+  /**
+   * API-Endpunkt, um alle Bestellungen des aktuelle eingeloggten Benutzer zu erhalten
+   */
   @GetMapping("/orders/me")
   @Secured("ROLE_USER")
   public List<Order> getOrderByLoggedInUser() {
@@ -150,6 +167,9 @@ public class OrderController {
     return orderRepository.findByUserId(user.getId());
   }
 
+  /**
+   * PATH-Endpunkt, um den Bestellstatus einer bestimmten Bestellung zu ändern
+   */
   @PatchMapping("/orders/{id}")
   @Secured("ROLE_USER")
   public ResponseEntity<?> patchOrderStatus(

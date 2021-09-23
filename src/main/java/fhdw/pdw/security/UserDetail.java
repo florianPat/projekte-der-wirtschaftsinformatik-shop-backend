@@ -9,6 +9,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * Benutzer Klasse, wie sie im Spring Security Context genutzt wird
+ */
 public class UserDetail implements UserDetails {
   protected int id;
   protected String email;

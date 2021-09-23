@@ -16,6 +16,10 @@ public class OrderMapper {
     this.productVariantRepository = productVariantRepository;
   }
 
+  /**
+   * Die Anfrage-Werte einer Bestellanfrage werden hier in eine Bestellentität überführt, welche
+   * dann in der Datenbank gespeichert werden können
+   */
   public Order mapFrom(List<OrderItemDto> orderItemDtoList) {
     Order result = new Order();
     List<OrderItem> orderItemList = new ArrayList<>();

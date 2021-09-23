@@ -18,6 +18,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
   protected ApplicationContext applicationContext;
 
+  /**
+   * Diese Methode verändert den Objektmapper von Jackson, um bei Arrays nicht nur die ID, sondern
+   * das ganze Objekt zu serialisieren
+   */
   @Override
   public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
     WebMvcConfigurer.super.extendMessageConverters(converters);

@@ -22,11 +22,18 @@ public class ProductUploadController {
     this.productMapper = productMapper;
   }
 
+  /**
+   * Render des Hochlade Formulars für die Produkt CSV Datei
+   */
   @GetMapping("/import-product-csv")
   public String uploadProductCsvFileForm(Model model) {
     return "productCsvUploadForm";
   }
 
+  /**
+   * Post-Abfrage, welche die Datei eingegenimmt und die darin genannten Produktinformationen in der
+   * Datenbank persistiert
+   */
   @PostMapping("/import-product-csv")
   public String uploadProductCsvFile(
       @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {

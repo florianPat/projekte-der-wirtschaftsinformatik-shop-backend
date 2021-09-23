@@ -4,6 +4,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+/**
+ * Service Klasse, um E-Mails mit der Shop Email Adresse zu verschicken
+ */
 @Component
 public class EmailService {
   protected JavaMailSender emailSender;

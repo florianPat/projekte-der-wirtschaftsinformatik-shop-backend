@@ -8,6 +8,10 @@ import com.fasterxml.jackson.databind.ser.BeanSerializerFactory;
 import com.fasterxml.jackson.databind.ser.ContainerSerializer;
 import com.fasterxml.jackson.databind.ser.SerializerFactory;
 
+/**
+ * Überschreibung des BeanSerializerFactories, um den eigens erstellten CollectionSerializer
+ * zu erzeugen und in das Jackson System zu injizieren
+ */
 public class CustomBeanSerializerFactory extends BeanSerializerFactory {
   private static final long serialVersionUID = 1;
 

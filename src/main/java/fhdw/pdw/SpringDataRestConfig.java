@@ -15,6 +15,9 @@ public class SpringDataRestConfig implements RepositoryRestConfigurer {
   @Autowired protected EntityManager entityManager;
   @Autowired protected Validator validator;
 
+  /**
+   * Konfiguration der Domänen, welche Anfragen an den Server schicken dürfen
+   */
   @Override
   public void configureRepositoryRestConfiguration(
       RepositoryRestConfiguration config, CorsRegistry cors) {
@@ -29,6 +32,9 @@ public class SpringDataRestConfig implements RepositoryRestConfigurer {
             .toArray(Class[]::new));
   }
 
+  /**
+   * Konfiguration, sodass Hibernate Validatoren beim persistieren validiert werden
+   */
   @Override
   public void configureValidatingRepositoryEventListener(
       ValidatingRepositoryEventListener validatingListener) {

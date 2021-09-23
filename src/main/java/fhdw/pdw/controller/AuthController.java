@@ -62,6 +62,10 @@ public class AuthController {
     this.constraintViolationSetToErrorResponseMapper = constraintViolationSetToErrorResponseMapper;
   }
 
+  /**
+   * Abfrage Anfrage zum registieren eines neuen Benutzers mit Validierung und Verschickung einer
+   * Email
+   */
   @PostMapping("/register")
   public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto user) {
     user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -105,6 +109,9 @@ public class AuthController {
     return new ResponseEntity<>(result, HttpStatus.CREATED);
   }
 
+  /**
+   * API-Endpunkt zum Einloggen mit einem registrierten Benutzers
+   */
   @PostMapping("/login")
   public ResponseEntity<?> loginUser(@Valid @RequestBody LoginUser user) {
     Authentication authentication =
@@ -115,6 +122,10 @@ public class AuthController {
     return new ResponseEntity<>(new JwtAuthenticationResponse(jwt), HttpStatus.OK);
   }
 
+  /**
+   * API-Abfrage, um die Benutzerdaten des eingeloggten Benutzers zu erhalten
+   * @return
+   */
   @GetMapping("/user")
   public ResponseEntity<?> getUser() {
     Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

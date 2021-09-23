@@ -16,6 +16,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     this.userRepository = userRepository;
   }
 
+  /**
+   * Um den Benutzer bei einer "getUser" Abfrage zu laden muss dieser am Benutzernamen erstellt werden
+   */
   @Override
   @Transactional
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -27,7 +30,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     return UserDetail.create(user);
   }
 
-  // NOTE: This method is used by JWTAuthenticationFilter
+  /**
+   * Benutzt von dem JWTAuthenticationFilter
+   */
   @Transactional
   public UserDetail loadUserById(Integer id) {
     User user =
