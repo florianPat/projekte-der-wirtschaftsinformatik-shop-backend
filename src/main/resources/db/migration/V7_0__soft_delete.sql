@@ -1,0 +1,10 @@
+alter table allergen add column deleted boolean not null default false;
+alter table category add column deleted boolean not null default false;
+alter table order_item add column deleted boolean not null default false;
+alter table orders add column deleted boolean not null default false;
+alter table producer add column deleted boolean not null default false;
+alter table product add column deleted boolean not null default false;
+alter table product_variant add column deleted boolean not null default false;
+alter table role add column deleted boolean not null default false;
+alter table unit add column deleted boolean not null default false;
+alter table users add column deleted boolean not null default false;

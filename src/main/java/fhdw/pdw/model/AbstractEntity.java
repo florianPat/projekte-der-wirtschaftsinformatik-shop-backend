@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @MappedSuperclass
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public abstract class AbstractEntity {
+public abstract class AbstractEntity implements Cloneable {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   protected int id;

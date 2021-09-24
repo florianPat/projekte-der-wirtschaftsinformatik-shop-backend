@@ -5,7 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductRepository extends JpaRepository<Product, Integer> {
+public interface ProductRepository
+    extends JpaRepository<Product, Integer>, SoftDeleteRepository<Product, Integer> {
   public Product findByName(String name);
 
   public List<Product> findByCategoryId(int id);

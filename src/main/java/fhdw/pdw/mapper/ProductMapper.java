@@ -72,9 +72,9 @@ public class ProductMapper {
   }
 
   public void mapAndReplaceFrom(List<ProductDto> dtos) {
-    productRepository.deleteAll();
-    unitRepository.deleteAll();
-    productVariantRepository.deleteAll();
+    productRepository.softDeleteAll();
+    unitRepository.softDeleteAll();
+    productVariantRepository.softDeleteAll();
     List<Product> products = mapFrom(dtos);
     for (Product product : products) {
       if (0 == product.getCategory().getId()) {

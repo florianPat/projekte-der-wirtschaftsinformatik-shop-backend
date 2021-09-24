@@ -11,7 +11,7 @@ import javax.persistence.*;
     generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "id",
     scope = Unit.class)
-public class Unit extends AbstractEntity {
+public class Unit extends AbstractSoftDeleteEntity {
   protected String title;
   protected float amount;
   protected int numberOfContainer;

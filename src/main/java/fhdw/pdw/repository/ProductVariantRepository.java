@@ -3,4 +3,5 @@ package fhdw.pdw.repository;
 import fhdw.pdw.model.ProductVariant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductVariantRepository extends JpaRepository<ProductVariant, Integer> {}
+public interface ProductVariantRepository
+    extends JpaRepository<ProductVariant, Integer>, SoftDeleteRepository<ProductVariant, Integer> {}

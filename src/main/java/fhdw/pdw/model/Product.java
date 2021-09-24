@@ -11,7 +11,7 @@ import javax.persistence.*;
     generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "id",
     scope = Product.class)
-public class Product extends AbstractEntity {
+public class Product extends AbstractSoftDeleteEntity {
   protected String name;
   protected String cover;
 

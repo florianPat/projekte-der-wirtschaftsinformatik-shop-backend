@@ -11,7 +11,7 @@ import javax.persistence.*;
     generator = ObjectIdGenerators.PropertyGenerator.class,
     property = "id",
     scope = ProductVariant.class)
-public class ProductVariant extends AbstractEntity {
+public class ProductVariant extends AbstractSoftDeleteEntity {
   protected int stock;
   protected float price;
 
